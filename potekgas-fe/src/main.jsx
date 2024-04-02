@@ -17,6 +17,8 @@ import "../public/assets/vendor/jquery-easing/jquery.easing.min.js";
 
 import "../public/js/sb-admin-2.min.js";
 
+import "../public/js/demo/datatables-demo.js"
+
 // import Chart from "chart.js/auto";
 // import "../public/js/demo/chart-area-demo.js";
 // import "../public/js/demo/chart-pie-demo.js";
