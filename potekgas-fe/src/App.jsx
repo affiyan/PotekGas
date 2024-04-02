@@ -1,8 +1,13 @@
 /* eslint-disable no-unused-vars */
 import HeaderComponent from "./components/Sidebar";
 import FooterComponent from "./components/Footer";
-import HomeComponent from "./components/Content";
+import NavbarComponent from "./components/Navbar";
+import TabelObat from "./pages/TabelObat";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import TabelPengguna from "./pages/TabelPengguna";
+import Dashboard from "./pages/Dashboard";
+import TabelPembelian from "./pages/TabelPembelian";
+import DetailPembelian from "./pages/DetailPembelian";
 
 function App() {
   return (
@@ -11,24 +16,21 @@ function App() {
         <div id="wrapper">
           <HeaderComponent />
           <div id="content-wrapper" className="d-flex flex-column">
+          <NavbarComponent />
             {/* Main Content */}
-            <div id="content">
-              <HomeComponent />
-              {/* <Routes>
-          <Route path="/" element={<ListUserComponent />}></Route>
-          <Route path="/user" element={<ListUserComponent />}></Route>
-          <Route path="/add-user" element={<UserComponent />}></Route>
-          <Route path="/update-user/:id" element={<UserComponent />}></Route>
-          <Route path="/prodi" element={<ListProdiComponent />}></Route>
-          <Route path="/add-prodi" element={<ProdiComponent />}></Route>
-          <Route path="/update-prodi/:id" element={<ProdiComponent />}></Route>
-          <Route path="/skema" element={<ListSkemaComponent />}></Route>
-          <Route path="/add-skema" element={<SkemaComponent />}></Route>
-          <Route path="/update-skema/:id" element={<SkemaComponent />}></Route>
-        </Routes> */}
-              <FooterComponent />
+            <div id="content" className="container-fluid">
+              <div className="page-wrapper">
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/data-obat" element={<TabelObat />} />
+                  <Route path="/data-pengguna" element={<TabelPengguna />} />
+                  <Route path="/data-pembelian" element={<TabelPembelian />} />
+                  <Route path="/data-detailpembelian" element={<DetailPembelian />} />
+                </Routes>
+              </div>
             </div>
             {/* End of Content Wrapper */}
+            <FooterComponent />
           </div>
         </div>
         
