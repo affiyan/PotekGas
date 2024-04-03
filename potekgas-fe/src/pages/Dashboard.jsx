@@ -1,9 +1,47 @@
-import React, { useEffect, useRef } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
+import { countAdmin, countKasir } from "../services/UserService";
+import { countObat } from "../services/ObatService";
 
 function Dashboard() {
   const areaChartRef = useRef(null);
   const pieChartRef = useRef(null);
+  const [admin, setAdmin] = useState(0);
+  const [kasir, setKasir] = useState(0);
+  const [obat, setObat] = useState(0);
+
+  useEffect(() => {
+    // Memanggil fungsi countAdmin dan countKasir saat komponen dimuat
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    // Memanggil kedua fungsi countAdmin dan countKasir
+    countAdmin()
+      .then((response) => {
+        setAdmin(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    countKasir()
+      .then((response) => {
+        setKasir(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    countObat()
+      .then((response) => {
+        setObat(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     // Inisialisasi chart area
@@ -195,11 +233,11 @@ function Dashboard() {
                       Jumlah Admin
                     </div>
                     <div className="h5 mb-0 font-weight-bold text-gray-800">
-                      7
+                      {admin} Admin
                     </div>
                   </div>
                   <div className="col-auto">
-                    <i className="fas fa-calendar fa-2x text-gray-300"></i>
+                    <i className="fas fa-user-tie fa-2x text-gray-300"></i>
                   </div>
                 </div>
               </div>
@@ -215,11 +253,11 @@ function Dashboard() {
                       Jumlah Kasir
                     </div>
                     <div className="h5 mb-0 font-weight-bold text-gray-800">
-                      6
+                      {kasir} Kasir
                     </div>
                   </div>
                   <div className="col-auto">
-                    <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    <i className="fas fa-cash-register fa-2x text-gray-300"></i>
                   </div>
                 </div>
               </div>
@@ -237,13 +275,13 @@ function Dashboard() {
                     <div className="row no-gutters align-items-center">
                       <div className="col-auto">
                         <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                          50 Macam
+                          {obat} Macam
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="col-auto">
-                    <i className="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    <i className="fas fa-capsules fa-2x text-gray-300"></i>
                   </div>
                 </div>
               </div>
