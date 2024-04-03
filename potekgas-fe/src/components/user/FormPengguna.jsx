@@ -25,6 +25,11 @@ function FormPengguna() {
           const userData = response.data.data[0];
           setNama_user(userData?.nama || "");
           setRole(userData?.role || "");
+          if (userData.role === "Admin") {
+            setRole(1);
+          } else if (userData.role === "Kasir") {
+            setRole(2);
+          }
           setUsername(userData?.username || "");
           setPassword(userData?.password || "");
           setNo_telp(userData?.no_telp || "");
@@ -37,17 +42,26 @@ function FormPengguna() {
 
   function saveUser(e) {
     e.preventDefault();
-    const user = {
+    var user = {
       id_user: id,
       nama_user,
       role,
       no_telp,
       username,
       password,
-      status: 1,
+      // status: 1,
     };
 
     if (isUpdateMode) {
+      user = {
+        id_user: id,
+        nama_user,
+        role,
+        no_telp,
+        username,
+        password,
+        status: 1,
+      };
       updateUser(user)
         .then(() => {
           navigate("/data-pengguna", { replace: true });
@@ -72,7 +86,7 @@ function FormPengguna() {
         <div className="col-lg  ">
           <div className="p-5">
             <div className="text-center">
-              <h1 className="h4 text-gray-900 mb-4">Data Pengguna</h1>
+              <h1 className="h4 text-gray-900 mb-4">Form Pengguna</h1>
             </div>
             <hr />
             <form className="user">
@@ -81,7 +95,7 @@ function FormPengguna() {
                   <input
                     type="text"
                     className="form-control form-control-user"
-                    placeholder="Nama"
+                    placeholder="Nama Pengguna"
                     name="nama"
                     value={nama_user}
                     onChange={(e) => setNama_user(e.target.value)}
@@ -103,7 +117,7 @@ function FormPengguna() {
                     onChange={(e) => setRole(e.target.value)}
                   >
                     <option value="" disabled>
-                      Pilih Role
+                      Role Pengguna
                     </option>
                     <option value="1">Admin</option>
                     <option value="2">Kasir</option>
@@ -128,12 +142,17 @@ function FormPengguna() {
                     placeholder="Nomor Telepon"
                     name="no_telp"
                     value={no_telp}
-                    onChange={(e) => setNo_telp(e.target.value)}
+                    onChange={(e) => {
+                      const input = e.target.value;
+                      if (input.length <= 13) {
+                        setNo_telp(input);
+                      }
+                    }}
                   />
                 </div>
               </div>
               <div className="form-group row">
-                <div className="col-sm mb-3 mb-sm-0">
+                <div className="col-sm">
                   <input
                     type="password"
                     className="form-control form-control-user"

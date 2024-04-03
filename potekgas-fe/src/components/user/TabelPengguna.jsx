@@ -31,7 +31,7 @@ function TabelPengguna() {
 
   function deleteUserHandler(usr) {
     const user = {
-      id: usr.id,
+      id_user: usr.id,
     };
 
     const isConfirmed = window.confirm(
@@ -56,12 +56,11 @@ function TabelPengguna() {
       <div className="col-lg  ">
         <div className="p-5">
           <div className="text-center">
-            <h1 className="h4 text-gray-900 mb-4">Form Pengguna</h1>
+            <h1 className="h4 text-gray-900 mb-4">Data Pengguna</h1>
           </div>
           <hr />
 
           <a
-            href="#"
             className="btn btn-sm btn-primary btn-icon-split mb-3"
             onClick={formPenggunaHandler}
           >

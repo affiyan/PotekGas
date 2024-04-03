@@ -4,6 +4,7 @@ import FooterComponent from "./components/template/Footer";
 import NavbarComponent from "./components/template/Navbar";
 import NotFound from "./components/template/NotFound";
 import TabelObat from "./components/obat/TabelObat";
+import FormObat from "./components/obat/FormObat";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import TabelPengguna from "./components/user/TabelPengguna";
 import FormPengguna from "./components/user/FormPengguna";
@@ -26,6 +27,8 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/data-obat" element={<TabelObat />} />
+                  <Route path="/form-obat" element={<FormObat />} />
+                  <Route path="/form-obat/:id" element={<FormObat />} />
                   <Route path="/data-pengguna" element={<TabelPengguna />} />
                   <Route path="/form-pengguna" element={<FormPengguna />} />
                   <Route path="/form-pengguna/:id" element={<FormPengguna />} />
