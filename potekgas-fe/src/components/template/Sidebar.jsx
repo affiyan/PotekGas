@@ -9,7 +9,7 @@ const Sidebar = () => {
             {/* Sidebar - Brand */}
             <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div className="sidebar-brand-icon rotate-n-15">
-                    <i className="fas fa-laugh-wink"></i>
+                    <i className="fas fa-clinic-medical"></i>
                 </div>
                 <div className="sidebar-brand-text mx-3">PotekGas <sup>Apotek Gaspol</sup></div>
             </a>
@@ -42,7 +42,7 @@ const Sidebar = () => {
                 </a>
                 <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div className="bg-white py-2 collapse-inner rounded">
-                        <h6 className="collapse-header">Pilihan Data:</h6>
+                        <h6 className="collapse-header">Pilihan Data : </h6>
                         <Link className="collapse-item" to="/data-pengguna">Data Pengguna</Link>
                         <Link className="collapse-item" to="/data-obat">Data Obat</Link>
                     </div>
@@ -67,7 +67,7 @@ const Sidebar = () => {
                 <div id="collapsePages" className="collapse" aria-labelledby="headingPages"
                     data-parent="#accordionSidebar">
                     <div className="bg-white py-2 collapse-inner rounded">
-                        <h6 className="collapse-header">Pilihan Transaksi:</h6>
+                        <h6 className="collapse-header">Pilihan Transaksi : </h6>
                         <Link className="collapse-item" to="/data-pembelian">Transaksi Pembelian</Link>
                         <Link className="collapse-item" to="/data-detailpembelian">Detail Pembelian</Link>
                     </div>
@@ -77,7 +77,7 @@ const Sidebar = () => {
             {/* Nav Item - Tables */}
             <li className="nav-item">
                 <a className="nav-link" href="tables.html">
-                    <i className="fas fa-fw fa-table"></i>
+                <i className="fas fa-fw fa-sign-out-alt"></i>
                     <span>Keluar</span>
                 </a>
             </li>

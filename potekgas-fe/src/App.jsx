@@ -62,7 +62,7 @@ function App() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
-                  Ready to Leave?
+                  Yakin Ingin Keluar?
                 </h5>
                 <button
                   className="close"
@@ -74,8 +74,7 @@ function App() {
                 </button>
               </div>
               <div className="modal-body">
-                Select "Logout" below if you are ready to end your current
-                session.
+                Pilih "Logout" untuk keluar dari Sistem.
               </div>
               <div className="modal-footer">
                 <button
@@ -83,7 +82,7 @@ function App() {
                   type="button"
                   data-dismiss="modal"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <a className="btn btn-primary" href="login.html">
                   Logout
