@@ -65,7 +65,6 @@ function App() {
                 <FooterComponent />
               </div>
             </div>
-<<<<<<< HEAD
             <a className="scroll-to-top rounded" href="#page-top">
               <i className="fas fa-angle-up"></i>
             </a>
@@ -109,54 +108,6 @@ function App() {
                     </a>
                   </div>
                 </div>
-=======
-            {/* End of Content Wrapper */}
-            <FooterComponent />
-          </div>
-        </div>
-
-        <a className="scroll-to-top rounded" href="#page-top">
-          <i className="fas fa-angle-up"></i>
-        </a>
-
-        <div
-          className="modal fade"
-          id="logoutModal"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
-                  Yakin Ingin Keluar?
-                </h5>
-                <button
-                  className="close"
-                  type="button"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                Pilih "Logout" untuk keluar dari Sistem.
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  type="button"
-                  data-dismiss="modal"
-                >
-                  Batal
-                </button>
-                <a className="btn btn-primary" href="login.html">
-                  Logout
-                </a>
->>>>>>> 5f3626aabde11ed41ae39270297fa3ec13abbaad
               </div>
             </div>
           </>
