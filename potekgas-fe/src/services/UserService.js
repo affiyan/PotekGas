@@ -10,3 +10,4 @@ export const getUserById = (id) => axios.get(REST_API_BASE_URL + `getUser/${id}`
 export const createUser = (user) => axios.post(REST_API_BASE_URL + 'saveUser', user)
 export const updateUser = (user) => axios.post(REST_API_BASE_URL + 'updateUser', user)
 export const deleteUser = (user) => axios.post(REST_API_BASE_URL + 'deleteUser', user)
+export const login = (user) => axios.post(REST_API_BASE_URL + 'login', user)

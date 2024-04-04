@@ -74,14 +74,6 @@ const Sidebar = () => {
                 </div>
             </li>
 
-            {/* Nav Item - Tables */}
-            <li className="nav-item">
-                <a className="nav-link" href="tables.html">
-                <i className="fas fa-fw fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </a>
-            </li>
-
             {/* Divider */}
             <hr className="sidebar-divider d-none d-md-block" />
 

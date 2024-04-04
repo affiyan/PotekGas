@@ -1,16 +1,36 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
+import Cookies from "js-cookie";
 
 function Navbar() {
+  const userData = Cookies.get("user");
+  var username, role;
+  if (userData != null) {
+    const userObj = JSON.parse(userData);
+    username = userObj[0].username;
+    role = userObj[0].role;
+  } else {
+    username, (role = "");
+  }
+
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-      <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
+      <button
+        id="sidebarToggleTop"
+        className="btn btn-link d-md-none rounded-circle mr-3"
+      >
         <i className="fa fa-bars"></i>
       </button>
-      
+
       <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div className="input-group">
-          <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+          <input
+            type="text"
+            className="form-control bg-light border-0 small"
+            placeholder="Search for..."
+            aria-label="Search"
+            aria-describedby="basic-addon2"
+          />
           <div className="input-group-append">
             <button className="btn btn-primary" type="button">
               <i className="fas fa-search fa-sm"></i>
@@ -18,16 +38,33 @@ function Navbar() {
           </div>
         </div>
       </form>
-      
+
       <ul className="navbar-nav ml-auto">
         <li className="nav-item dropdown no-arrow d-sm-none">
-          <a className="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a
+            className="nav-link dropdown-toggle"
+            href="#"
+            id="searchDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             <i className="fas fa-search fa-fw"></i>
           </a>
-          <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+          <div
+            className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+            aria-labelledby="searchDropdown"
+          >
             <form className="form-inline mr-auto w-100 navbar-search">
               <div className="input-group">
-                <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+                <input
+                  type="text"
+                  className="form-control bg-light border-0 small"
+                  placeholder="Search for..."
+                  aria-label="Search"
+                  aria-describedby="basic-addon2"
+                />
                 <div className="input-group-append">
                   <button className="btn btn-primary" type="button">
                     <i className="fas fa-search fa-sm"></i>
@@ -37,24 +74,42 @@ function Navbar() {
             </form>
           </div>
         </li>
-        
-        <li className="nav-item dropdown no-arrow mx-1">
-          {/* Alerts */}
-        </li>
-        
-        <li className="nav-item dropdown no-arrow mx-1">
-          {/* Messages */}
-        </li>
-        
+
+        <li className="nav-item dropdown no-arrow mx-1">{/* Alerts */}</li>
+
+        <li className="nav-item dropdown no-arrow mx-1">{/* Messages */}</li>
+
         <div className="topbar-divider d-none d-sm-block"></div>
-        
+
         <li className="nav-item dropdown no-arrow">
-          <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span className="mr-2 d-none d-lg-inline text-gray-600 small">Ini Pegawai Potekgas</span>
-            <img className="img-profile rounded-circle" src="../public/assets/img/undraw_profile.svg" alt="Profile" />
+          <a
+            className="nav-link dropdown-toggle"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+              Hai {username} | {role}
+            </span>
+            <img
+              className="img-profile rounded-circle"
+              src="../public/assets/img/undraw_profile.svg"
+              alt="Profile"
+            />
           </a>
-          <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-            <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+          <div
+            className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+            aria-labelledby="userDropdown"
+          >
+            <a
+              className="dropdown-item"
+              href="#"
+              data-toggle="modal"
+              data-target="#logoutModal"
+            >
               <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
               Logout
             </a>

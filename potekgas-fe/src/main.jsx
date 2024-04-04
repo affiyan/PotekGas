@@ -7,7 +7,7 @@ import "../public/css/sb-admin-2.min.css";
 
 // import "../public/font.css";
 import "../public/assets/vendor/jquery/jquery.min.js";
-import "../public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js";
+// import "../public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js";
 import "../public/assets/vendor/jquery-easing/jquery.easing.js";
 import "../public/js/sb-admin-2.min.js";
 import "../public/assets/vendor/jquery/jquery.min.js";
