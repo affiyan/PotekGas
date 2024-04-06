@@ -1,17 +1,41 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { getUser } from "../../services/UserService"; // Menggunakan getUserById dari UserService
+import { useParams } from "react-router-dom";
 
 function Navbar() {
-  const userData = Cookies.get("user");
-  var username, role;
-  if (userData != null) {
-    const userObj = JSON.parse(userData);
-    username = userObj[0].username;
-    role = userObj[0].role;
-  } else {
-    username, (role = "");
-  }
+  const [id, setId] = useState("");
+  const [nama, setNama] = useState("");
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = Cookies.get("user");
+
+      if (userData != null) {
+        const userObj = JSON.parse(userData);
+        const userId = userObj[0].id; // Gunakan variabel lokal untuk menyimpan nilai id
+
+        try {
+          const response = await getUser(userId);
+          const responseData = response.data.data[0];
+          setNama(responseData.nama);
+          setRole(responseData.role);
+          // if (responseData.role === "1") {
+          //   setRole("Admin");
+          // } else if (responseData.role === "2") {
+          //   setRole("Kasir");
+          // }
+        } catch (error) {
+          // Sembunyikan pesan kesalahan dari console.log
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -92,7 +116,7 @@ function Navbar() {
             aria-expanded="false"
           >
             <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-              Hai {username} | {role}
+              {nama} | {role}
             </span>
             <img
               className="img-profile rounded-circle"
