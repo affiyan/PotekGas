@@ -126,9 +126,9 @@ function FormObat() {
       <div className="container-fluid">
         <div className="col-lg  ">
           <div className="p-5">
-            <div className="text-center">
-              <h1 className="h4 text-gray-900 mb-4">Form Obat</h1>
-            </div>
+          <div className="text-center">
+            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Form Obat</h1>
+          </div>
             <hr />
             <form className="user">
               <div className="form-group row">
@@ -146,7 +146,7 @@ function FormObat() {
                   <input
                     type="text"
                     className="form-control form-control-user"
-                    placeholder="merk_obat"
+                    placeholder="Merk obat"
                     name="merk_obat"
                     value={merk_obat}
                     onChange={(e) => setMerk_obat(e.target.value)}
@@ -226,13 +226,13 @@ function FormObat() {
                 className="btn btn-primary btn-user btn-block"
                 onClick={saveObat}
               >
-                Submit
+                Simpan Data
               </button>
               <hr />
             </form>
             <hr />
             <div className="text-center">
-              <a href="/data-Obat">← Back to Data Obat</a>
+              <a href="/data-Obat">← Kembali ke Data Obat</a>
             </div>
           </div>
         </div>

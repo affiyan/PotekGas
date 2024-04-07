@@ -69,6 +69,7 @@ function App() {
               <i className="fas fa-angle-up"></i>
             </a>
             <div
+            
               className="modal fade"
               id="logoutModal"
               tabIndex="-1"
@@ -79,9 +80,9 @@ function App() {
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">
-                      Ready to Leave?
-                    </h5>
+                  <h5 className="modal-title" id="exampleModalLabel" style={{ fontWeight: "bold" }}>
+                    Keluar
+                  </h5>
                     <button
                       className="close"
                       type="button"
@@ -92,8 +93,7 @@ function App() {
                     </button>
                   </div>
                   <div className="modal-body">
-                    Select Logout below if you are ready to end your current
-                    session.
+                    Pilih Keluar Untuk Keluar Dari Program.
                   </div>
                   <div className="modal-footer">
                     <button
@@ -101,10 +101,10 @@ function App() {
                       type="button"
                       data-dismiss="modal"
                     >
-                      Cancel
+                      Batal
                     </button>
-                    <a className="btn btn-primary" href="/">
-                      Logout
+                    <a className="btn btn-danger font-weight-bold" href="/">
+                      Keluar
                     </a>
                   </div>
                 </div>

@@ -1,15 +1,34 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
+import $ from 'jquery'; 
+import 'datatables.net-dt'; 
 
 function TabelObat() {
   const [obats, setObats] = useState([]);
   const navigator = useNavigate();
+  const tableRef = useRef(null);
 
   useEffect(() => {
     loadObats();
   }, []);
+
+  useEffect(() => {
+    if (obats.length > 0) {
+      const table = tableRef.current;
+      if (table) {
+        $(table).DataTable().destroy(); 
+        $(table).DataTable({
+          paging: true, 
+          searching: true, 
+          ordering: true, 
+          info: true,
+          responsive: true,
+          autoWidth: false, 
+        });
+      }
+    }
+  }, [obats]);
 
   const loadObats = () => {
     listObats()
@@ -32,7 +51,6 @@ function TabelObat() {
 
   const formatExpired = (expired) => {
     const options = {
-      // weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -72,11 +90,11 @@ function TabelObat() {
 
   return (
     <div className="container-fluid">
-      <div className="col-lg  ">
+      <div className="col-lg">
         <div className="p-5">
-          <div className="text-center">
-            <h1 className="h4 text-gray-900 mb-4">Data Obat</h1>
-          </div>
+        <div className="text-center">
+          <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Data Obat</h1>
+        </div>
           <hr />
 
           <a
@@ -89,57 +107,63 @@ function TabelObat() {
             <span className="text">Tambah Obat</span>
           </a>
 
-          <table id="dataTable" className="table table-hover table">
-            <thead>
-              <tr className="text-center">
-                <th>No</th>
-                <th>Nama Obat</th>
-                <th>Merk Obat</th>
-                <th>Jenis</th>
-                <th>Harga</th>
-                <th>Keterangan</th>
-                <th>Expired</th>
-                <th>Stok</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {obats.map((obat, index) => (
-                <tr key={obat.id} className="text-center">
-                  <td>{index + 1}</td>
-                  <td>{obat.namaObat}</td>
-                  <td>{obat.merk}</td>
-                  <td>{obat.jenis}</td>
-                  <td>{formatRupiah(obat.harga)}</td>
-                  <td>{obat.keterangan}</td>
-                  <td>{formatExpired(obat.tgl_kadaluarsa)}</td>
-                  <td>{obat.stok}</td>
-                  <td>{obat.status}</td>
-                  <td className="text-center">
-                    <a
-                      className="btn btn-sm btn-warning btn-icon-split"
-                      onClick={() => updateobatHandler(obat)}
-                    >
-                      <span className="icon text-white-50">
-                        <i className="fas fa-edit"></i>
-                      </span>
-                      <span className="text">Update</span>
-                    </a>{" "}
-                    <a
-                      className="btn btn-sm btn-danger btn-icon-split"
-                      onClick={() => deleteObatHandler(obat)}
-                    >
-                      <span className="icon text-white-50">
-                        <i className="fas fa-trash"></i>
-                      </span>
-                      <span className="text">Hapus</span>
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="card shadow mb-4"> 
+            <div className="card-body"> 
+              <div className="table-responsive"> 
+                <table id="dataTable" className="table table-hover table" ref={tableRef}>
+                  <thead>
+                  <tr className="text-center">
+                      <th>No</th>
+                      <th>Nama Obat</th>
+                      <th>Merk Obat</th>
+                      <th>Jenis</th>
+                      <th>Harga</th>
+                      <th>Keterangan</th>
+                      <th>Expired</th>
+                      <th>Stok</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {obats.map((obat, index) => (
+                      <tr key={obat.id} className="text-center">
+                        <td className="text-center">{index + 1}</td>
+                        <td className="text-left">{obat.namaObat}</td>
+                        <td className="text-left">{obat.merk}</td>
+                        <td className="text-left">{obat.jenis}</td>
+                        <td>{formatRupiah(obat.harga)}</td>
+                        <td className="text-left">{obat.keterangan}</td>
+                        <td className="text-left">{formatExpired(obat.tgl_kadaluarsa)}</td>
+                        <td className="text-center">{obat.stok}</td>
+                        <td className="text-center">{obat.status}</td>
+                        <td className="text-center">
+                          <a
+                            className="btn btn-sm btn-warning btn-icon-split"
+                            onClick={() => updateobatHandler(obat)}
+                          >
+                            <span className="icon text-white-50">
+                              <i className="fas fa-edit"></i>
+                            </span>
+                            <span className="text">Update</span>
+                          </a>{" "}
+                          <a
+                            className="btn btn-sm btn-danger btn-icon-split"
+                            onClick={() => deleteObatHandler(obat)}
+                          >
+                            <span className="icon text-white-50">
+                              <i className="fas fa-trash"></i>
+                            </span>
+                            <span className="text">Hapus</span>
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

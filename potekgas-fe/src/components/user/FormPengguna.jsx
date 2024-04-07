@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import {
   createUser,
@@ -15,6 +14,7 @@ function FormPengguna() {
   const [no_telp, setNo_telp] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,6 +39,10 @@ function FormPengguna() {
         });
     }
   }, [isUpdateMode, id]);
+
+  function togglePasswordVisibility() {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  }
 
   function saveUser(e) {
     e.preventDefault();
@@ -85,9 +89,9 @@ function FormPengguna() {
       <div className="container-fluid">
         <div className="col-lg  ">
           <div className="p-5">
-            <div className="text-center">
-              <h1 className="h4 text-gray-900 mb-4">Form Pengguna</h1>
-            </div>
+          <div className="text-center">
+            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Form Pengguna</h1>
+          </div>
             <hr />
             <form className="user">
               <div className="form-group row">
@@ -101,15 +105,14 @@ function FormPengguna() {
                     onChange={(e) => setNama_user(e.target.value)}
                   />
                 </div>
-                <div className="col-sm-6">
-                  {/* <span>Role</span> */}
+                <div className="col-sm-6 mb-3 mb-sm-0">
                   <select
                     name="role"
                     id="role"
                     className="form-control"
                     style={{
                       borderRadius: "10rem",
-                      fontSize: "0.8rem",
+                      fontSize: "1rem",
                       height: "100%",
                       verticalAlign: "top",
                     }}
@@ -136,6 +139,33 @@ function FormPengguna() {
                   />
                 </div>
                 <div className="col-sm-6">
+                  <div className="form-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control form-control-user"
+                      placeholder="Password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span
+                      className="position-absolute top-5 end-0 translate-middle-y"
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{
+                        cursor: "pointer",
+                        top: "1px",
+                        marginTop: "14px",
+                        right: "30px",
+                        zIndex: "2",
+                      }}
+                    >
+                      {showPassword ? <i className="fas fa-eye"></i> : <i className="fas fa-eye-slash"></i>}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group row">
+                <div className="col-sm-6">
                   <input
                     type="number"
                     className="form-control form-control-user"
@@ -151,29 +181,17 @@ function FormPengguna() {
                   />
                 </div>
               </div>
-              <div className="form-group row">
-                <div className="col-sm">
-                  <input
-                    type="password"
-                    className="form-control form-control-user"
-                    placeholder="Password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
               <button
                 className="btn btn-primary btn-user btn-block"
                 onClick={saveUser}
               >
-                Submit
+                Simpan Data
               </button>
               <hr />
             </form>
             <hr />
             <div className="text-center">
-              <a href="/data-pengguna">← Back to Data Pengguna</a>
+              <a href="/data-pengguna">← Kembali ke Data Pengguna</a>
             </div>
           </div>
         </div>

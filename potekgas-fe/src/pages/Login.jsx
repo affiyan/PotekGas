@@ -11,6 +11,7 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   function warningNotify(message) {
@@ -89,15 +90,16 @@ const Login = () => {
                   className="col-lg-6 d-none d-lg-block bg-login-image"
                   style={{
                     background:
-                      "url(src/assets/gmbr.jpg) no-repeat center center",
+                      "url(src/assets/Iluspotekblue.png) no-repeat center center",
                     backgroundSize: "cover",
-                    height: "80vh", // Set tinggi gambar menjadi 100vh
+                    height: "85vh", // Set tinggi gambar menjadi 100vh
                   }}
                 ></div>
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                    <h1 className="h4 text-gray-900 mb-4" style={{ fontWeight: "bold" }}>Selamat Datang Di PotekGas!</h1>
+
                     </div>
                     <form className="user">
                       <div className="form-group">
@@ -111,21 +113,40 @@ const Login = () => {
                         />
                       </div>
                       <div className="form-group">
-                        <input
-                          type="password"
-                          className="form-control form-control-user"
-                          placeholder="Password"
-                          name="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <div className="position-relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            className="form-control form-control-user"
+                            placeholder="Password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                          <span
+                            className="position-absolute top-5 end-0 translate-middle-y"
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                              cursor: "pointer",
+                              top: "1px",
+                              marginTop: "14px",
+                              right: "15px",
+                              zIndex: "2", 
+                            }}
+                          >
+                            {showPassword ? (
+                              <i className="fas fa-eye"></i>
+                            ) : (
+                              <i className="fas fa-eye-slash"></i>
+                            )}
+                          </span>
+                        </div>
                       </div>
                       {/* Memanggil fungsi loginUser saat tombol login diklik */}
                       <button
                         className="btn btn-primary btn-user btn-block"
                         onClick={loginUser}
                       >
-                        Login
+                        Masuk
                       </button>
                       <ToastContainer />
                     </form>
