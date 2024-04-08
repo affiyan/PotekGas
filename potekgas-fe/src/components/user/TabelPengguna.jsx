@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import { listUsers, deleteUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
