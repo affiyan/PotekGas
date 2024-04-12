@@ -11,7 +11,9 @@ import FormPengguna from "./components/user/FormPengguna";
 import Dashboard from "./pages/Dashboard";
 import TabelPembelian from "./components/transaksi/TabelPembelian";
 import DetailPembelian from "./components/transaksi/DetailPembelian";
+import Pembelian from "./components/transaksi/Pembelian";
 import Login from "./pages/Login";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const currentURL = window.location.href;
@@ -57,6 +59,10 @@ function App() {
                         path="/data-detailpembelian"
                         element={<DetailPembelian />}
                       />
+                      <Route
+                        path="/form-Pembelian"
+                        element={<Pembelian />}
+                      />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
@@ -68,7 +74,7 @@ function App() {
             <a className="scroll-to-top rounded" href="#page-top">
               <i className="fas fa-angle-up"></i>
             </a>
-            <div            
+            <div
               className="modal fade"
               id="logoutModal"
               tabIndex="-1"
@@ -79,9 +85,13 @@ function App() {
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel" style={{ fontWeight: "bold" }}>
-                    Keluar
-                  </h5>
+                    <h5
+                      className="modal-title"
+                      id="exampleModalLabel"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      Keluar
+                    </h5>
                     <button
                       className="close"
                       type="button"

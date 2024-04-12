@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listUsers, deleteUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
-import $ from 'jquery'; 
+import $ from "jquery";
 import DataTable from "datatables.net-dt";
 
 function TabelPengguna() {
@@ -18,14 +18,37 @@ function TabelPengguna() {
     if (users.length > 0) {
       const table = tableRef.current;
       if (table) {
-        $(table).DataTable().destroy(); 
+        $(table).DataTable().destroy();
         $(table).DataTable({
-          paging: true, 
-          searching: true, 
-          ordering: true, 
+          paging: true,
+          searching: true,
+          ordering: true,
           info: true,
           responsive: true,
           autoWidth: false,
+          language: {
+            search: "", // mengganti teks "Search" menjadi "Cari:"
+            lengthMenu: "Tampilkan _MENU_ data per halaman", // mengganti teks "Entries per page" dengan teks baru
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data", // mengganti teks info
+            infoEmpty: "Data tidak tersedia", // mengganti teks ketika tidak ada data yang tersedia
+            infoFiltered: "(disaring dari _MAX_ total data)", // mengganti teks ketika data difilter
+            paginate: {
+              first: "Pertama", // mengganti teks tombol pertama
+              previous: "Sebelumnya", // mengganti teks tombol sebelumnya
+              next: "Selanjutnya", // mengganti teks tombol selanjutnya
+              last: "Terakhir", // mengganti teks tombol terakhir
+            },
+          },
+          initComplete: function () {
+            // Set border radius for search input
+            $(".dt-input")
+              .addClass("form-control-sm")
+              .attr("placeholder", "Search")
+              .css({ borderRadius: "15px" });
+            $(".dt-paging-button")
+              .addClass("btn btn-primary")
+              .css({ borderRadius: "15px" });
+          },
         });
       }
     }
@@ -75,10 +98,12 @@ function TabelPengguna() {
     <div className="container-fluid">
       <div className="col-lg">
         <div className="p-5">
-        <div className="text-center">
-          <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Data Pengguna</h1>
-        </div>
-        <hr />
+          <div className="text-center">
+            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">
+              Data Pengguna
+            </h1>
+          </div>
+          <hr />
 
           <a
             className="btn btn-sm btn-primary btn-icon-split mb-3"
@@ -90,12 +115,16 @@ function TabelPengguna() {
             <span className="text">Tambah Pengguna</span>
           </a>
 
-          <div className="card shadow mb-4"> 
-            <div className="card-body"> 
-              <div className="table-responsive"> 
-                <table id="TablePengguna" className="table table-hover table" ref={tableRef}>
+          <div className="card shadow mb-4">
+            <div className="card-body">
+              <div className="table-responsive">
+                <table
+                  id="TablePengguna"
+                  className="table table-hover table"
+                  ref={tableRef}
+                >
                   <thead>
-                  <tr className="text-center">
+                    <tr className="text-center">
                       <th className="text-center">No</th>
                       <th className="text-center">Nama Pengguna</th>
                       <th className="text-center">Telp</th>

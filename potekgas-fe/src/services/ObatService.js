@@ -6,6 +6,9 @@ const REST_API_BASE_URL = 'http://localhost:8083/obats/'
 export const listObats = () => axios.get(REST_API_BASE_URL + 'getObatActive');
 export const countObat = () => axios.get(REST_API_BASE_URL + 'countObat');
 export const getObatById = (id) => axios.get(REST_API_BASE_URL + `getObat/${id}`);
-export const createObat = (obat) => axios.post(REST_API_BASE_URL + 'saveObat', obat)
-export const updateObat = (obat) => axios.post(REST_API_BASE_URL + 'updateObat', obat)
+export const createObat = (obat, param) => axios.post(REST_API_BASE_URL + 'saveObat', obat, { params: param });
+export const createObatt = (obat, param) => axios.post(REST_API_BASE_URL + 'saveObatt', obat, { params: param });
+export const updateObat = (obat, param) => axios.post(REST_API_BASE_URL + 'updateObat', obat, { params: param });
+export const updateObatt = (obat, param) => axios.post(REST_API_BASE_URL + 'updateObatt', obat, { params: param });
+// export const updateObat = (obat) => axios.post(REST_API_BASE_URL + 'updateObat', obat)
 export const deleteObat = (obat) => axios.post(REST_API_BASE_URL + 'deleteObat', obat)

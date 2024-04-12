@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from "react";
 import {
   createObat,
+  createObatt,
   updateObat,
+  updateObatt,
   getObatById,
 } from "../../services/ObatService";
 import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 function FormObat() {
   const { id } = useParams();
@@ -13,11 +16,13 @@ function FormObat() {
   const [nama_obat, setNama_obat] = useState("");
   const [merk_obat, setMerk_obat] = useState("");
   const [jenis_obat, setJenis_obat] = useState("");
-  const [harga, setHarga] = useState("");
+  const [harga, setHarga] = useState(0);
   const [hargaFormatted, setHargaFormatted] = useState("");
-  const [tgl_kadaluarsa, setTgl_kadaluarsa] = useState("");
-  const [stok, setStok] = useState("");
+  const [tgl_kadaluarsa, setTgl_kadaluarsa] = useState("0001-01-01");
+  const [stok, setStok] = useState(0);
   const [keterangan, setKeterangan] = useState("");
+  const [gambar, setGambar] = useState("");
+  const [gambarUrl, setGambarUrl] = useState("");
 
   const navigate = useNavigate();
 
@@ -39,6 +44,8 @@ function FormObat() {
           }
           setStok(obatData?.stok || "");
           setKeterangan(obatData?.keterangan || "");
+          // setGambar(obatData?.gambar || ""); // Sesuaikan dengan properti yang menyimpan URL gambar
+          // setGambar(obatData?.gambar); // Sesuaikan dengan properti yang menyimpan URL gambar
         })
         .catch((error) => {
           console.error("Error fetching Obat data:", error);
@@ -46,47 +53,109 @@ function FormObat() {
     }
   }, [isUpdateMode, id]);
 
+  function warningNotify(message) {
+    toast.warn(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+
+  function successNotify(message) {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      onClose: () => navigate("/data-obat"),
+    });
+  }
+
   function saveObat(e) {
     e.preventDefault();
-    var obat = {
-      id_obat: id,
-      nama_obat,
-      merk_obat,
-      jenis_obat,
-      harga,
-      keterangan,
-      stok,
-      tgl_kadaluarsa,
-      //   status: 1,
-    };
+
+    const formData = new FormData();
+    formData.append("idObat", id);
+    formData.append("namaObat", nama_obat);
+    formData.append("merkObat", merk_obat);
+    formData.append("jenisObat", jenis_obat);
+    formData.append("tglKadaluarsa", tgl_kadaluarsa);
+    formData.append("harga", harga);
+    formData.append("stok", stok);
+    formData.append("keterangan", keterangan);
+    formData.append("status", 1);
+    formData.append("gambar", gambar);
 
     if (isUpdateMode) {
-      obat = {
-        id_obat: id,
-        nama_obat,
-        merk_obat,
-        jenis_obat,
-        harga,
-        keterangan,
-        stok,
-        tgl_kadaluarsa,
-        status: 1,
-      };
-      updateObat(obat)
-        .then(() => {
-          navigate("/data-Obat", { replace: true });
+      if (gambar !== "" && gambar !== null){
+        updateObat(formData, formData)
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
         })
         .catch((error) => {
           console.error("Error updating Obat:", error.response);
         });
+      } else {
+        updateObatt(formData, formData)
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating Obat:", error.response);
+        });
+      }
     } else {
-      createObat(obat)
-        .then(() => {
-          navigate("/data-Obat");
+      if (gambar !== "" && gambar !== null){
+        createObat(formData, formData) // Tambahkan formData sebagai parameter pertama
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
         })
         .catch((error) => {
           console.error("Error saving Obat:", error);
         });
+      } else {
+        createObatt(formData, formData) // Tambahkan formData sebagai parameter pertama
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          console.log(status)
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving Obat:", error);
+        });
+      }
     }
   }
 
@@ -126,9 +195,11 @@ function FormObat() {
       <div className="container-fluid">
         <div className="col-lg  ">
           <div className="p-5">
-          <div className="text-center">
-            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Form Obat</h1>
-          </div>
+            <div className="text-center">
+              <h1 className="h4 text-gray-900 mb-4 font-weight-bold">
+                Form Obat
+              </h1>
+            </div>
             <hr />
             <form className="user">
               <div className="form-group row">
@@ -209,7 +280,7 @@ function FormObat() {
                 </div>
               </div>
               <div className="form-group row">
-                <div className="col-sm">
+                <div className="col-sm-6">
                   <textarea
                     name="keterangan"
                     id="keterangan"
@@ -219,7 +290,42 @@ function FormObat() {
                     placeholder="Keterangan"
                     value={keterangan}
                     onChange={(e) => setKeterangan(e.target.value)}
+                    style={{
+                      borderRadius: "10px",
+                    }}
                   ></textarea>
+                </div>
+                <div className="col-sm-6">
+                  <label htmlFor="gambar" className="btn btn-primary">
+                    Pilih Gambar 
+                  </label>
+                  <input
+                    type="file"
+                    id="gambar"
+                    className="form-control form-control-user"
+                    accept="image/*"
+                    style={{
+                      display: "none",
+                    }}
+                    // value={gambar}
+                    onChange={(e) => {
+                      setGambar(e.target.files[0]);
+                      setGambarUrl(URL.createObjectURL(e.target.files[0])); // Simpan URL gambar
+                    }}
+                  />{" "}
+                  <br />
+                  <img
+                    src={
+                      gambarUrl || `http://localhost:8083/obats/gambar/${id}`
+                    }
+                    alt="Belum Memilih Gambar"
+                    style={{
+                      width: "210px",
+                      height: "210px",
+                      border: "2px solid #ccc",
+                      borderRadius: "10px",
+                    }}
+                  />
                 </div>
               </div>
               <button
@@ -228,6 +334,7 @@ function FormObat() {
               >
                 Simpan Data
               </button>
+              <ToastContainer />
               <hr />
             </form>
             <hr />

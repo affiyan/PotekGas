@@ -3,6 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import { countAdmin, countKasir } from "../services/UserService";
 import { countObat } from "../services/ObatService";
+import {
+  countPembelian,
+  getBestSellerObat,
+} from "../services/PembelianService";
+import { Collapse } from "react-bootstrap";
 
 function Dashboard() {
   const areaChartRef = useRef(null);
@@ -10,6 +15,14 @@ function Dashboard() {
   const [admin, setAdmin] = useState(0);
   const [kasir, setKasir] = useState(0);
   const [obat, setObat] = useState(0);
+  const [pembelian, setPembelian] = useState(0);
+  const [obatBestSeller, setObatBestSeller] = useState([]);
+  const [jumlahObatBestSeller, setJumlahObatBestSeller] = useState([]);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleCollapse = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     // Memanggil fungsi countAdmin dan countKasir saat komponen dimuat
@@ -37,6 +50,26 @@ function Dashboard() {
     countObat()
       .then((response) => {
         setObat(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    countPembelian()
+      .then((response) => {
+        setPembelian(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    getBestSellerObat()
+      .then((response) => {
+        const resArray = response.data.data;
+        const obatNames = resArray.map((item) => item[0]);
+        const obatQuantities = resArray.map((item) => item[1]);
+        setObatBestSeller(obatNames);
+        setJumlahObatBestSeller(obatQuantities);
       })
       .catch((error) => {
         console.log(error);
@@ -185,10 +218,10 @@ function Dashboard() {
     var myPieChart = new Chart(ctxPie, {
       type: "doughnut",
       data: {
-        labels: ["Direct", "Referral", "Social"],
+        labels: obatBestSeller,
         datasets: [
           {
-            data: [55, 30, 15],
+            data: jumlahObatBestSeller,
             backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
             hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
             hoverBorderColor: "rgba(234, 236, 244, 1)",
@@ -218,7 +251,7 @@ function Dashboard() {
       myAreaChart.destroy();
       myPieChart.destroy();
     };
-  }, []);
+  }, [obatBestSeller, jumlahObatBestSeller]);
 
   return (
     <>
@@ -297,7 +330,7 @@ function Dashboard() {
                       Jumlah Transaksi{" "}
                     </div>
                     <div className="h5 mb-0 font-weight-bold text-gray-800">
-                      18
+                      {pembelian} Transaksi Pembelian
                     </div>
                   </div>
                   <div className="col-auto">
@@ -316,19 +349,6 @@ function Dashboard() {
                 <h6 className="m-0 font-weight-bold text-primary">
                   Total Penjualan
                 </h6>
-                <div className="dropdown no-arrow">
-                  <a
-                    className="dropdown-toggle"
-                    href="#"
-                    role="button"
-                    id="dropdownMenuLink"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                  </a>
-                </div>
               </div>
               <div className="card-body">
                 <div className="chart-area">
@@ -351,50 +371,28 @@ function Dashboard() {
                 <h6 className="m-0 font-weight-bold text-primary">
                   Best Seller Obat
                 </h6>
-                <div className="dropdown no-arrow">
-                  <a
-                    className="dropdown-toggle"
-                    href="#"
-                    role="button"
-                    id="dropdownMenuLink"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                  </a>
-                  <div
-                    className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                    aria-labelledby="dropdownMenuLink"
-                  >
-                    <div className="dropdown-header">Dropdown Header:</div>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
               </div>
               <div className="card-body">
                 <div className="chart-pie pt-4 pb-2">
                   <canvas ref={pieChartRef}></canvas>
                 </div>
                 <div className="mt-4 text-center small">
-                  <span className="mr-2">
-                    <i className="fas fa-circle text-primary"></i> Direct
-                  </span>
-                  <span className="mr-2">
-                    <i className="fas fa-circle text-success"></i> Social
-                  </span>
-                  <span className="mr-2">
-                    <i className="fas fa-circle text-info"></i> Referral
-                  </span>
+                  {/* Mengubah label pada chart pie sesuai dengan data obatBestSeller */}
+                  {/* {obatBestSeller.map((obat, index) => (
+                    <span key={index} className="mr-2">
+                      <i
+                        className={`fas fa-circle text-${
+                          index === 0
+                            ? "primary"
+                            : index === 1
+                            ? "success"
+                            : "info"
+                        }`}
+                      ></i>{" "}
+                      {obat}
+                    </span>
+                  ))} */}
+                  <br />
                 </div>
               </div>
             </div>

@@ -3,6 +3,8 @@ import axios from "axios";
 const REST_API_BASE_URL = 'http://localhost:8083/'
 
 export const listPembelians = () => axios.get(REST_API_BASE_URL + 'pembelian/getPembelians');
+export const countPembelian = () => axios.get(REST_API_BASE_URL + 'pembelian/countPembelian');
+export const getBestSellerObat = () => axios.get(REST_API_BASE_URL + 'pembelian/getBestSellerObat');
 // export const listPembelians = () => axios.get(REST_API_BASE_URL + 'getPembelianActive');
 // export const countAdmin = () => axios.get(REST_API_BASE_URL + 'countAdmin');
 // export const countKasir = () => axios.get(REST_API_BASE_URL + 'countKasir');

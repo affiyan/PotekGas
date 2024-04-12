@@ -2,8 +2,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
-import $ from 'jquery'; 
-import 'datatables.net-dt'; 
+import $ from "jquery";
+import "datatables.net-dt";
 
 function TabelObat() {
   const [obats, setObats] = useState([]);
@@ -18,14 +18,37 @@ function TabelObat() {
     if (obats.length > 0) {
       const table = tableRef.current;
       if (table) {
-        $(table).DataTable().destroy(); 
+        $(table).DataTable().destroy();
         $(table).DataTable({
-          paging: true, 
-          searching: true, 
-          ordering: true, 
+          paging: true,
+          searching: true,
+          ordering: true,
           info: true,
           responsive: true,
-          autoWidth: false, 
+          autoWidth: false,
+          language: {
+            search: "", // mengganti teks "Search" menjadi "Cari:"
+            lengthMenu: "Tampilkan _MENU_ data per halaman", // mengganti teks "Entries per page" dengan teks baru
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data", // mengganti teks info
+            infoEmpty: "Data tidak tersedia", // mengganti teks ketika tidak ada data yang tersedia
+            infoFiltered: "(disaring dari _MAX_ total data)", // mengganti teks ketika data difilter
+            paginate: {
+              first: "Pertama", // mengganti teks tombol pertama
+              previous: "Sebelumnya", // mengganti teks tombol sebelumnya
+              next: "Selanjutnya", // mengganti teks tombol selanjutnya
+              last: "Terakhir", // mengganti teks tombol terakhir
+            },
+          },
+          initComplete: function () {
+            // Set border radius for search input
+            $(".dt-input")
+              .addClass("form-control-sm")
+              .attr("placeholder", "Search")
+              .css({ borderRadius: "15px" });
+            $(".dt-paging-button")
+              .addClass("btn btn-primary")
+              .css({ borderRadius: "15px" });
+          },
         });
       }
     }
@@ -93,9 +116,11 @@ function TabelObat() {
     <div className="container-fluid">
       <div className="col-lg">
         <div className="p-5">
-        <div className="text-center">
-          <h1 className="h4 text-gray-900 mb-4 font-weight-bold">Data Obat</h1>
-        </div>
+          <div className="text-center">
+            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">
+              Data Obat
+            </h1>
+          </div>
           <hr />
 
           <a
@@ -108,12 +133,16 @@ function TabelObat() {
             <span className="text">Tambah Obat</span>
           </a>
 
-          <div className="card shadow mb-4"> 
-            <div className="card-body"> 
-              <div className="table-responsive"> 
-                <table id="dataTable" className="table table-hover table" ref={tableRef}>
+          <div className="card shadow mb-4">
+            <div className="card-body">
+              <div className="table-responsive">
+                <table
+                  id="dataTable"
+                  className="table table-hover table"
+                  ref={tableRef}
+                >
                   <thead>
-                  <tr className="text-center">
+                    <tr className="text-center">
                       <th>No</th>
                       <th>Nama Obat</th>
                       <th>Merk Obat</th>
@@ -135,7 +164,9 @@ function TabelObat() {
                         <td className="text-left">{obat.jenis}</td>
                         <td>{formatRupiah(obat.harga)}</td>
                         <td className="text-left">{obat.keterangan}</td>
-                        <td className="text-left">{formatExpired(obat.tgl_kadaluarsa)}</td>
+                        <td className="text-left">
+                          {formatExpired(obat.tgl_kadaluarsa)}
+                        </td>
                         <td className="text-center">{obat.stok}</td>
                         <td className="text-center">{obat.status}</td>
                         <td className="text-center">

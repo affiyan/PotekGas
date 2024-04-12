@@ -4,8 +4,10 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-
+  optimizeDeps: {
+    include: ['react-bootstrap'],
+  },
   server: {
-    port:1234
+    port:1234, 
   }
 })
