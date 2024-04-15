@@ -5,9 +5,10 @@ import { getUser } from "../../services/UserService"; // Menggunakan getUserById
 import { useParams } from "react-router-dom";
 
 function Navbar() {
-  const [id, setId] = useState("");
+  const [id, setId] = useState(0);
   const [nama, setNama] = useState("");
   const [role, setRole] = useState("");
+  const [foto, setFoto] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -15,11 +16,13 @@ function Navbar() {
 
       if (userData != null) {
         const userObj = JSON.parse(userData);
-        const userId = userObj[0].id; // Gunakan variabel lokal untuk menyimpan nilai id
+        const userId = userObj[0].id;
+        setId(userObj[0].id)
 
         try {
           const response = await getUser(userId);
           const responseData = response.data.data[0];
+          setFoto(responseData.foto);
           setNama(responseData.nama);
           setRole(responseData.role);
           // if (responseData.role === "1") {
@@ -35,7 +38,7 @@ function Navbar() {
     };
 
     fetchUserData();
-  }, []);
+  }, [id]);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -120,7 +123,7 @@ function Navbar() {
             </span>
             <img
               className="img-profile rounded-circle"
-              src="../public/assets/img/undraw_profile.svg"
+              src={foto !== null ? `http://localhost:8083/users/foto/${id}` : '../public/assets/img/undraw_profile.svg'}
               alt="Profile"
             />
           </a>

@@ -16,6 +16,8 @@ function FormPengguna() {
   const [no_telp, setNo_telp] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [gambar, setGambar] = useState(""); // State untuk menyimpan gambar yang dipilih
+  const [gambarUrl, setGambarUrl] = useState(""); // State untuk menyimpan URL gambar yang dipilih
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
@@ -69,12 +71,10 @@ function FormPengguna() {
       draggable: true,
       progress: undefined,
       theme: "light",
-      onClose: () => (
-        navigate("/data-pengguna")
-      ),
+      onClose: () => navigate("/data-pengguna"),
     });
   }
-  
+
   function saveUser(e) {
     e.preventDefault();
 
@@ -88,51 +88,63 @@ function FormPengguna() {
       // status: 1,
     };
 
+    // Buat objek FormData untuk mengirim data termasuk file gambar
+    const formData = new FormData();
+    formData.append("idUser", id);
+    formData.append("namaUser", nama_user);
+    formData.append("role", role);
+    formData.append("noTelp", no_telp);
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("status", 1);
+    formData.append("foto", gambar); // Tambahkan gambar ke FormData
+
     if (isUpdateMode) {
-      user = {
-        id_user: id,
-        nama_user,
-        role,
-        no_telp,
-        username,
-        password,
-        status: 1,
-      };
-      updateUser(user)
-        .then((response) => {
-          const status = response.data.status;
-          const message = response.data.message;
-          // console.log(message);
-          if (status === 200) {
-            // navigate("/data-pengguna");
-            successNotify(message)
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating user:", error.response);
-        });
+      updateUser(formData, formData)
+      .then((response) => {
+        const status = response.data.status;
+        const message = response.data.message;
+        if (status === 200) {
+          successNotify(message);
+        } else {
+          warningNotify(message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error.response);
+      });
     } else {
-      createUser(user)
-        .then((response) => {
-          const status = response.data.status;
-          const message = response.data.message;
-          // console.log(message);
-          if (status === 200) {
-            // navigate("/data-pengguna");
-            successNotify(message)
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving user:", error);
-          warningNotify("Gagal menyimpan pengguna. Silakan coba lagi.");
-        });
+      createUser(formData, formData)
+          .then((response) => {
+            const status = response.data.status;
+            const message = response.data.message;
+            if (status === 200) {
+              successNotify(message);
+            } else {
+              warningNotify(message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving user:", error);
+          });
     }
   }
 
+  function deleteSelectedImage() {
+    // Menampilkan konfirmasi sebelum menghapus gambar
+    // const isConfirmed = window.confirm("Apakah Anda yakin ingin menghapus gambar?");
+    // if (isConfirmed) {
+    //   setGambar('null'); // Menghapus gambar dari state
+    //   setGambarUrl('../public/assets/img/undraw_profile.svg');
+    //   console.log('gambar : '+gambar) // Mengosongkan URL gambar yang ditampilkan
+    //   console.log('gambar Url : '+gambarUrl) // Mengosongkan URL gambar yang ditampilkan
+    // }
+    setGambar(null); // Menghapus gambar dari state
+    setGambarUrl('../public/assets/img/undraw_profile.svg');
+    console.log('gambar : '+gambar) // Mengosongkan URL gambar yang ditampilkan
+    console.log('gambar Url : '+gambarUrl) // Mengosongkan URL gambar yang ditampilkan
+  }
+  
   return (
     <>
       <div className="container-fluid">
@@ -230,6 +242,38 @@ function FormPengguna() {
                       if (input.length <= 13) {
                         setNo_telp(input);
                       }
+                    }}
+                  />
+                </div>
+                <div className="col-sm-6 ">
+                  <label htmlFor="gambar" className="btn btn-primary">
+                    Pilih Gambar
+                  </label>{" "}
+                  <label onClick={deleteSelectedImage} className="btn btn-danger">
+                    Hapus Gambar
+                  </label>
+                  <input
+                    type="file"
+                    id="gambar"
+                    className="form-control form-control-user"
+                    accept="image/*"
+                    style={{
+                      display: "none",
+                    }}
+                    onChange={(e) => {
+                      setGambar(e.target.files[0]); // Set gambar yang dipilih ke state
+                      setGambarUrl(URL.createObjectURL(e.target.files[0])); // Set URL gambar yang dipilih ke state
+                    }}
+                  />{" "}
+                  <br />
+                  <img
+                    src={gambarUrl || `http://localhost:8083/users/foto/${id}`}
+                    alt="Belum Memilih Gambar"
+                    style={{
+                      width: "210px",
+                      height: "210px",
+                      border: "2px solid #ccc",
+                      borderRadius: "10px",
                     }}
                   />
                 </div>

@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from "react";
 import {
   createObat,
-  createObatt,
   updateObat,
-  updateObatt,
   getObatById,
 } from "../../services/ObatService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -96,8 +94,7 @@ function FormObat() {
     formData.append("gambar", gambar);
 
     if (isUpdateMode) {
-      if (gambar !== "" && gambar !== null){
-        updateObat(formData, formData)
+      updateObat(formData, formData)
         .then((response) => {
           const status = response.data.status;
           const message = response.data.message;
@@ -110,52 +107,20 @@ function FormObat() {
         .catch((error) => {
           console.error("Error updating Obat:", error.response);
         });
-      } else {
-        updateObatt(formData, formData)
-        .then((response) => {
-          const status = response.data.status;
-          const message = response.data.message;
-          if (status === 200) {
-            successNotify(message);
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating Obat:", error.response);
-        });
-      }
     } else {
-      if (gambar !== "" && gambar !== null){
-        createObat(formData, formData) // Tambahkan formData sebagai parameter pertama
-        .then((response) => {
-          const status = response.data.status;
-          const message = response.data.message;
-          if (status === 200) {
-            successNotify(message);
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving Obat:", error);
-        });
-      } else {
-        createObatt(formData, formData) // Tambahkan formData sebagai parameter pertama
-        .then((response) => {
-          const status = response.data.status;
-          const message = response.data.message;
-          console.log(status)
-          if (status === 200) {
-            successNotify(message);
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving Obat:", error);
-        });
-      }
+      createObat(formData, formData) // Tambahkan formData sebagai parameter pertama
+      .then((response) => {
+        const status = response.data.status;
+        const message = response.data.message;
+        if (status === 200) {
+          successNotify(message);
+        } else {
+          warningNotify(message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error saving Obat:", error);
+      });
     }
   }
 
@@ -312,7 +277,8 @@ function FormObat() {
                       setGambar(e.target.files[0]);
                       setGambarUrl(URL.createObjectURL(e.target.files[0])); // Simpan URL gambar
                     }}
-                  />{" "}
+                  />
+                  {" "}
                   <br />
                   <img
                     src={
