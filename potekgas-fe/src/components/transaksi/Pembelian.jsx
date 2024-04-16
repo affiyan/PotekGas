@@ -2,11 +2,18 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 import gambar from "../../assets/paracetramol.jpg";
 
-function TabelObat() {
+function TabelObat({ userId }) {
   const [obats, setObats] = useState([]);
+  const [selectedObat, setSelectedObat] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
   const navigator = useNavigate();
+  const [selectedItems, setSelectedItems] = useState([]);
+
 
   useEffect(() => {
     loadObats();
@@ -44,33 +51,48 @@ function TabelObat() {
     navigator("/form-obat");
   }
 
-  function updateobatHandler(obat) {
-    navigator(`/form-obat/${obat.id}`);
-  }
+  const handleBeli = (obat) => {
+    setSelectedObat(obat);
+    setShowModal(true);
+  };
 
-  function deleteObatHandler(obt) {
-    const obat = {
-      id_obat: obt.id,
-    };
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedObat(null);
+    setQuantity(1);
+  };
 
-    const isConfirmed = window.confirm(
-      "Apakah Anda Yakin Ingin Menghapus Obat Ini?"
-    );
+  const handleBeliConfirm = () => {
+    // Implementasi logika beli obat di sini
+    console.log("Membeli obat:", selectedObat, "dengan kuantitas:", quantity);
+    handleCloseModal();
+  };
 
-    if (isConfirmed) {
-      deleteObat(obat)
-        .then(() => {
-          loadObats();
-        })
-        .catch((error) => {
-          console.error("Error deleting Obat:", error);
-        });
+  const addToCart = () => {
+    // Penambahan item ke keranjang dengan menyertakan ID pengguna
+    const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
+    if (existingItemIndex !== -1) {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingItemIndex].kuantitas += quantity;
+      updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
+      setCartItems(updatedCartItems);
     } else {
-      alert("Batal Menghapus Obat");
+      setCartItems(prevState => [
+        ...prevState,
+        {
+          id_obat: selectedObat.id,
+          kuantitas: quantity,
+          total_harga: selectedObat.harga * quantity,
+          tanggal_transaksi: new Date().toISOString()
+        }
+      ]);
     }
-  }
+    handleCloseModal();
+    // Add console log here
+    console.log("Updated Cart Items:", cartItems);
+  };
 
-  return (
+   return (
     <div className="container-fluid">
       <div className="col-lg">
         <div className="p-5">
@@ -81,16 +103,6 @@ function TabelObat() {
           </div>
           <hr />
 
-          <a
-            className="btn btn-sm btn-primary btn-icon-split mb-3"
-            onClick={formObatHandler}
-          >
-            <span className="icon text-white-50">
-              <i className="fas fa-plus"></i>
-            </span>
-            <span className="text">Tambah Obat</span>
-          </a>
-
           <div className="row">
             {obats.map((obat, index) => (
               <div className="col-lg-4 mb-4" key={obat.id}>
@@ -99,7 +111,7 @@ function TabelObat() {
                     <img
                       className="card-img-top"
                       src={`http://localhost:8083/obats/gambar/${obat.id}`}
-                      // alt={obat.namaObat}
+                      alt={obat.namaObat}
                       style={{
                         width: "150px",
                         height: "150px",
@@ -109,37 +121,32 @@ function TabelObat() {
                     />
                   </div>
                   <div className="card-body">
-                    {`http://localhost:8083/obats/gambar/` + obat.id}
-                    <h5 className="card-title">{obat.namaObat}</h5>
+                    <h5 className="card-title" style={{ fontWeight: "bold" }}>
+                      {obat.namaObat}
+                    </h5>
                     <p className="card-text">Merk: {obat.merk}</p>
-                    <p className="card-text">Jenis: {obat.jenis}</p>
-                    <p className="card-text">
-                      Harga: {formatRupiah(obat.harga)}
+                    <p
+                      className="card-text"
+                      style={{ fontStyle: "italic", fontWeight: "bold" }}
+                    >
+                      {formatRupiah(obat.harga)}
                     </p>
-                    <p className="card-text">Keterangan: {obat.keterangan}</p>
                     <p className="card-text">
-                      Expired: {formatExpired(obat.tgl_kadaluarsa)}
+                      Exp:{" "}
+                      <span style={{ fontStyle: "italic" }}>
+                        {formatExpired(obat.tgl_kadaluarsa)}
+                      </span>
                     </p>
                     <p className="card-text">Stok: {obat.stok}</p>
-                    <p className="card-text">Status: {obat.status}</p>
                     <div className="text-center">
                       <a
-                        className="btn btn-sm btn-warning btn-icon-split mr-2"
-                        onClick={() => updateobatHandler(obat)}
+                        className="btn btn-sm btn-success btn-icon-split mr-2"
+                        onClick={() => handleBeli(obat)}
                       >
                         <span className="icon text-white-50">
-                          <i className="fas fa-edit"></i>
+                          <i className="fas fa-shopping-cart"></i>
                         </span>
-                        <span className="text">Update</span>
-                      </a>
-                      <a
-                        className="btn btn-sm btn-danger btn-icon-split"
-                        onClick={() => deleteObatHandler(obat)}
-                      >
-                        <span className="icon text-white-50">
-                          <i className="fas fa-trash"></i>
-                        </span>
-                        <span className="text">Hapus</span>
+                        <span className="text">Beli</span>
                       </a>
                     </div>
                   </div>
@@ -149,8 +156,68 @@ function TabelObat() {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedObat && (
+      <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+              <Modal.Title>
+                <span style={{ fontWeight: "bold", fontStyle: "italic", fontSize: "35px"}}>
+                  Pembelian Obat
+                </span>
+              </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <img
+              src={`http://localhost:8083/obats/gambar/${selectedObat.id}`}
+
+              style={{ width: "100%", marginBottom: "10px" }}
+            />
+            <p
+              style={{ fontWeight: "bold", fontStyle: "italic", fontSize: "30px" }}>
+              {selectedObat.namaObat}
+            </p>
+            <p 
+              style={{fontStyle: "italic", fontSize: "25px" }}>
+              Harga: {formatRupiah(selectedObat.harga)}
+            </p>
+            <p>Stok: {selectedObat.stok}</p>
+            <div className="d-flex align-items-center">
+              <button
+                className="btn btn-sm btn-outline-primary mr-2"
+                onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min="1"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                className="form-control mr-2"
+                style={{ width: "60px" }}
+              />
+              <button
+                className="btn btn-sm btn-outline-primary"
+                onClick={() =>
+                  setQuantity(quantity < selectedObat.stok ? quantity + 1 : quantity)
+                }
+              >
+                +
+              </button>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Tutup
+            </Button>
+            <Button variant="primary" onClick={addToCart}>
+              Beli
+            </Button>
+          </Modal.Footer>
+        </Modal>    
+      )}
     </div>
   );
 }
-
 export default TabelObat;

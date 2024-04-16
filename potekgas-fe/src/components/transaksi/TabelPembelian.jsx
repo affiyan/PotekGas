@@ -32,16 +32,16 @@ function TabelPembelian() {
           responsive: true,
           autoWidth: false,
           language: {
-            search: "", // mengganti teks "Search" menjadi "Cari:"
-            lengthMenu: "Tampilkan _MENU_ data per halaman", // mengganti teks "Entries per page" dengan teks baru
+            search: "",                                                 // mengganti teks "Search" menjadi "Cari:"
+            lengthMenu: "Tampilkan _MENU_ data per halaman",            // mengganti teks "Entries per page" dengan teks baru
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data", // mengganti teks info
-            infoEmpty: "Data tidak tersedia", // mengganti teks ketika tidak ada data yang tersedia
-            infoFiltered: "(disaring dari _MAX_ total data)", // mengganti teks ketika data difilter
+            infoEmpty: "Data tidak tersedia",                           // mengganti teks ketika tidak ada data yang tersedia
+            infoFiltered: "(disaring dari _MAX_ total data)",           // mengganti teks ketika data difilter
             paginate: {
-              first: "Pertama", // mengganti teks tombol pertama
-              previous: "Sebelumnya", // mengganti teks tombol sebelumnya
-              next: "Selanjutnya", // mengganti teks tombol selanjutnya
-              last: "Terakhir", // mengganti teks tombol terakhir
+              first: "Pertama",                                         // mengganti teks tombol pertama
+              previous: "Sebelumnya",                                   // mengganti teks tombol sebelumnya
+              next: "Selanjutnya",                                      // mengganti teks tombol selanjutnya
+              last: "Terakhir",                                         // mengganti teks tombol terakhir
             },
           },
           initComplete: function () {

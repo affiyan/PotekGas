@@ -3,13 +3,16 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { getUser } from "../../services/UserService"; // Menggunakan getUserById dari UserService
 import { useParams } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
 
 function Navbar() {
   const [id, setId] = useState(0);
   const [nama, setNama] = useState("");
   const [role, setRole] = useState("");
   const [foto, setFoto] = useState(null);
-
+  const [cartItems, setCartItems] = useState([]);
+  const [userId, setUserId] = useState(null);
+  
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = Cookies.get("user");
@@ -18,6 +21,7 @@ function Navbar() {
         const userObj = JSON.parse(userData);
         const userId = userObj[0].id;
         setId(userObj[0].id)
+        setUserId(userId);
 
         try {
           const response = await getUser(userId);
@@ -39,6 +43,8 @@ function Navbar() {
 
     fetchUserData();
   }, [id]);
+
+  const cartItemCount = cartItems.reduce((total, item) => total + item.kuantitas, 0);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -79,6 +85,7 @@ function Navbar() {
           >
             <i className="fas fa-search fa-fw"></i>
           </a>
+          
           <div
             className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
             aria-labelledby="searchDropdown"
@@ -104,7 +111,12 @@ function Navbar() {
 
         <li className="nav-item dropdown no-arrow mx-1">{/* Alerts */}</li>
 
-        <li className="nav-item dropdown no-arrow mx-1">{/* Messages */}</li>
+        <div className="nav-item no-arrow mx-1">
+          <a className="nav-link">
+            <FaShoppingCart />
+            <span className="badge badge-danger badge-counter">{cartItemCount}</span>
+          </a>
+        </div>
 
         <div className="topbar-divider d-none d-sm-block"></div>
 
@@ -119,7 +131,11 @@ function Navbar() {
             aria-expanded="false"
           >
             <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-              {nama} | {role}
+              {nama}
+            </span>
+            <div className="topbar-divider"></div> {/* Divider di sini */}
+            <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+              {role}
             </span>
             <img
               className="img-profile rounded-circle"
