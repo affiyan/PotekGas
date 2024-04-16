@@ -69,13 +69,14 @@ function TabelObat({ userId }) {
   };
 
   const addToCart = () => {
-    // Penambahan item ke keranjang dengan menyertakan ID pengguna
+    // Menambahkan item ke keranjang dengan menyertakan ID obat, kuantitas, total harga, dan tanggal transaksi
     const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
     if (existingItemIndex !== -1) {
       const updatedCartItems = [...cartItems];
       updatedCartItems[existingItemIndex].kuantitas += quantity;
       updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
       setCartItems(updatedCartItems);
+      console.log("Yang ada di keranjang:", updatedCartItems); 
     } else {
       setCartItems(prevState => [
         ...prevState,
@@ -86,11 +87,16 @@ function TabelObat({ userId }) {
           tanggal_transaksi: new Date().toISOString()
         }
       ]);
+      console.log("Yang ada di keranjang:", [...cartItems, { 
+          id_obat: selectedObat.id,
+          kuantitas: quantity,
+          total_harga: selectedObat.harga * quantity,
+          tanggal_transaksi: new Date().toISOString()
+        }]); 
     }
     handleCloseModal();
-    // Add console log here
-    console.log("Updated Cart Items:", cartItems);
-  };
+};
+
 
    return (
     <div className="container-fluid">
