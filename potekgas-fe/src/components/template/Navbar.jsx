@@ -13,6 +13,7 @@ function Navbar() {
   const [foto, setFoto] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [cartItemCount, setCartItemCount] = useState(0);
   
   useEffect(() => {
     const fetchUserData = async () => {
@@ -46,12 +47,10 @@ function Navbar() {
   }, [id]);
 
   useEffect(() => {
-    // Set cartItemCount berdasarkan panjang array cartItems
-    setCartItemCount(cartItems.length);
+    const totalQuantity = cartItems.reduce((total, item) => total + item.kuantitas, 0);
+    setCartItemCount(totalQuantity);
   }, [cartItems]);
-
-  const cartItemCount = cartItems.reduce((total, item) => total + item.kuantitas, 0);
-
+  
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
       <button
