@@ -12,8 +12,8 @@ function TabelObat({ userId }) {
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
   const navigator = useNavigate();
-  const [selectedItems, setSelectedItems] = useState([]);
 
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     loadObats();
@@ -69,34 +69,33 @@ function TabelObat({ userId }) {
   };
 
   const addToCart = () => {
-    // Menambahkan item ke keranjang dengan menyertakan ID obat, kuantitas, total harga, dan tanggal transaksi
-    const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
-    if (existingItemIndex !== -1) {
-      const updatedCartItems = [...cartItems];
-      updatedCartItems[existingItemIndex].kuantitas += quantity;
-      updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
-      setCartItems(updatedCartItems);
-      console.log("Yang ada di keranjang:", updatedCartItems); 
-    } else {
-      setCartItems(prevState => [
-        ...prevState,
-        {
-          id_obat: selectedObat.id,
-          kuantitas: quantity,
-          total_harga: selectedObat.harga * quantity,
-          tanggal_transaksi: new Date().toISOString()
-        }
-      ]);
-      console.log("Yang ada di keranjang:", [...cartItems, { 
-          id_obat: selectedObat.id,
-          kuantitas: quantity,
-          total_harga: selectedObat.harga * quantity,
-          tanggal_transaksi: new Date().toISOString()
-        }]); 
-    }
-    handleCloseModal();
-};
-
+      // Menambahkan item ke keranjang dengan menyertakan ID obat, kuantitas, total harga, dan tanggal transaksi
+      const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
+      if (existingItemIndex !== -1) {
+        const updatedCartItems = [...cartItems];
+        updatedCartItems[existingItemIndex].kuantitas += quantity;
+        updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
+        setCartItems(updatedCartItems);
+        console.log("Yang ada di keranjang:", updatedCartItems); 
+      } else {
+        setCartItems(prevState => [
+          ...prevState,
+          {
+            id_obat: selectedObat.id,
+            kuantitas: quantity,
+            total_harga: selectedObat.harga * quantity,
+            tanggal_transaksi: new Date().toISOString()
+          }
+        ]);
+        console.log("Yang ada di keranjang:", [...cartItems, { 
+            id_obat: selectedObat.id,
+            kuantitas: quantity,
+            total_harga: selectedObat.harga * quantity,
+            tanggal_transaksi: new Date().toISOString()
+          }]); 
+      }
+      handleCloseModal();
+  };
 
    return (
     <div className="container-fluid">

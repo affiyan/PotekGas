@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { getUser } from "../../services/UserService"; // Menggunakan getUserById dari UserService
 import { useParams } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
+import { Modal, Button } from "react-bootstrap";
 
 function Navbar() {
   const [id, setId] = useState(0);
@@ -43,6 +44,11 @@ function Navbar() {
 
     fetchUserData();
   }, [id]);
+
+  useEffect(() => {
+    // Set cartItemCount berdasarkan panjang array cartItems
+    setCartItemCount(cartItems.length);
+  }, [cartItems]);
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.kuantitas, 0);
 
