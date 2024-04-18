@@ -78,21 +78,25 @@ function Pembelian() {
   }, []);
   
   const addToCart = () => {
-    // Buat objek baru untuk item yang akan ditambahkan ke keranjang
     const newItem = {
       id_obat: selectedObat.id,
+      namaObat: selectedObat.namaObat,
       kuantitas: quantity,
       total_harga: selectedObat.harga * quantity,
       tanggal_transaksi: new Date().toISOString(),
+      gambar: selectedObat.gambar, // Menyimpan URL gambar atau path file
     };
   
     // Tambahkan item baru ke data cartItems yang sudah ada
-    setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+    const updatedCartItems = [...cartItems, newItem];
+    setCartItems(updatedCartItems);
   
     // Simpan data cartItems yang sudah diperbarui ke dalam cookies
-    Cookies.set("cartItems", JSON.stringify([...cartItems, newItem]));
-    window.location.reload()
+    Cookies.set("cartItems", JSON.stringify(updatedCartItems));
+    window.location.reload();
   };
+  
+  
 
   return (
     <>
