@@ -4,10 +4,11 @@ import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import gambar from "../../assets/paracetramol.jpg";
+import Cookies from 'js-cookie';
 
-function TabelObat({ userId }) {
+function Pembelian() {
   const [obats, setObats] = useState([]);
-  const [selectedObat, setSelectedObat] = useState(null);
+  const [selectedObat, setSelectedObat] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
@@ -53,7 +54,7 @@ function TabelObat({ userId }) {
 
   const handleBeli = (obat) => {
     setSelectedObat(obat);
-    setShowModal(true);
+    // setShowModal(true);
   };
 
   const handleCloseModal = () => {
@@ -68,161 +69,227 @@ function TabelObat({ userId }) {
     handleCloseModal();
   };
 
+  useEffect(() => {
+    // Ambil data cartItems dari cookies saat komponen dimuat
+    const existingCartItems = Cookies.get("cartItems");
+    if (existingCartItems) {
+      setCartItems(JSON.parse(existingCartItems));
+    }
+  }, []);
+  
   const addToCart = () => {
-      // Menambahkan item ke keranjang dengan menyertakan ID obat, kuantitas, total harga, dan tanggal transaksi
-      const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
-      if (existingItemIndex !== -1) {
-        const updatedCartItems = [...cartItems];
-        updatedCartItems[existingItemIndex].kuantitas += quantity;
-        updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
-        setCartItems(updatedCartItems);
-        console.log("Yang ada di keranjang:", updatedCartItems); 
-      } else {
-        setCartItems(prevState => [
-          ...prevState,
-          {
-            id_obat: selectedObat.id,
-            kuantitas: quantity,
-            total_harga: selectedObat.harga * quantity,
-            tanggal_transaksi: new Date().toISOString()
-          }
-        ]);
-        console.log("Yang ada di keranjang:", [...cartItems, { 
-            id_obat: selectedObat.id,
-            kuantitas: quantity,
-            total_harga: selectedObat.harga * quantity,
-            tanggal_transaksi: new Date().toISOString()
-          }]); 
-      }
-      handleCloseModal();
+    // Buat objek baru untuk item yang akan ditambahkan ke keranjang
+    const newItem = {
+      id_obat: selectedObat.id,
+      kuantitas: quantity,
+      total_harga: selectedObat.harga * quantity,
+      tanggal_transaksi: new Date().toISOString(),
+    };
+  
+    // Tambahkan item baru ke data cartItems yang sudah ada
+    setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+  
+    // Simpan data cartItems yang sudah diperbarui ke dalam cookies
+    Cookies.set("cartItems", JSON.stringify([...cartItems, newItem]));
+    window.location.reload()
   };
 
-   return (
-    <div className="container-fluid">
-      <div className="col-lg">
-        <div className="p-5">
-          <div className="text-center">
-            <h1 className="h4 text-gray-900 mb-4 font-weight-bold">
-              Pembelian
-            </h1>
-          </div>
-          <hr />
+  return (
+    <>
+      <div className="container-fluid">
+        <div className="col-lg">
+          <div className="p-5">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h1 className="h4 text-gray-900 font-weight-bold mx-auto">
+                Pembelian
+              </h1>
+            </div>
+            <hr />
 
-          <div className="row">
-            {obats.map((obat, index) => (
-              <div className="col-lg-4 mb-4" key={obat.id}>
-                <div className="card shadow">
-                  <div className="card-body d-flex justify-content-center align-items-center">
-                    <img
-                      className="card-img-top"
-                      src={`http://localhost:8083/obats/gambar/${obat.id}`}
-                      alt={obat.namaObat}
-                      style={{
-                        width: "150px",
-                        height: "150px",
-                        border: "2px solid #ccc",
-                        borderRadius: "15px",
-                      }}
-                    />
-                  </div>
-                  <div className="card-body">
-                    <h5 className="card-title" style={{ fontWeight: "bold" }}>
-                      {obat.namaObat}
-                    </h5>
-                    <p className="card-text">Merk: {obat.merk}</p>
-                    <p
-                      className="card-text"
-                      style={{ fontStyle: "italic", fontWeight: "bold" }}
-                    >
-                      {formatRupiah(obat.harga)}
-                    </p>
-                    <p className="card-text">
-                      Exp:{" "}
-                      <span style={{ fontStyle: "italic" }}>
-                        {formatExpired(obat.tgl_kadaluarsa)}
-                      </span>
-                    </p>
-                    <p className="card-text">Stok: {obat.stok}</p>
-                    <div className="text-center">
-                      <a
-                        className="btn btn-sm btn-success btn-icon-split mr-2"
-                        onClick={() => handleBeli(obat)}
+            <div className="row">
+              {obats.map((obat, index) => (
+                <div className="col-lg-4 mb-4" key={obat.id}>
+                  <div className="card shadow">
+                    <div className="card-body d-flex justify-content-center align-items-center">
+                      <img
+                        className="card-img-top"
+                        src={`http://localhost:8083/obats/gambar/${obat.id}`}
+                        alt={obat.namaObat}
+                        style={{
+                          width: "150px",
+                          height: "150px",
+                          border: "2px solid #ccc",
+                          borderRadius: "15px",
+                        }}
+                      />
+                    </div>
+                    <div className="card-body">
+                      <h5 className="card-title" style={{ fontWeight: "bold" }}>
+                        {obat.namaObat}
+                      </h5>
+                      <p className="card-text">Merk: {obat.merk}</p>
+                      <p
+                        className="card-text"
+                        style={{ fontStyle: "italic", fontWeight: "bold" }}
                       >
-                        <span className="icon text-white-50">
-                          <i className="fas fa-shopping-cart"></i>
+                        {formatRupiah(obat.harga)}
+                      </p>
+                      <p className="card-text">
+                        Exp:{" "}
+                        <span style={{ fontStyle: "italic" }}>
+                          {formatExpired(obat.tgl_kadaluarsa)}
                         </span>
-                        <span className="text">Beli</span>
-                      </a>
+                      </p>
+                      <p className="card-text">Stok: {obat.stok}</p>
+                      <div className="text-center">
+                        <a
+                          className="btn btn-sm btn-success btn-icon-split mr-2"
+                          data-toggle="modal"
+                          data-target="#detailModal"
+                          onClick={() => handleBeli(obat)}
+                        >
+                          <span className="icon text-white-50">
+                            <i className="fas fa-shopping-cart"></i>
+                          </span>
+                          <span className="text">Beli</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Modal */}
-      {selectedObat && (
-      <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-              <Modal.Title>
-                <span style={{ fontWeight: "bold", fontStyle: "italic", fontSize: "35px"}}>
-                  Pembelian Obat
-                </span>
-              </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <img
-              src={`http://localhost:8083/obats/gambar/${selectedObat.id}`}
-
-              style={{ width: "100%", marginBottom: "10px" }}
-            />
-            <p
-              style={{ fontWeight: "bold", fontStyle: "italic", fontSize: "30px" }}>
-              {selectedObat.namaObat}
-            </p>
-            <p 
-              style={{fontStyle: "italic", fontSize: "25px" }}>
-              Harga: {formatRupiah(selectedObat.harga)}
-            </p>
-            <p>Stok: {selectedObat.stok}</p>
-            <div className="d-flex align-items-center">
-              <button
-                className="btn btn-sm btn-outline-primary mr-2"
-                onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+      <div
+        className="modal fade"
+        id="detailModal"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5
+                className="modal-title"
+                id="exampleModalLabel"
+                style={{ fontWeight: "bold" }}
               >
-                -
-              </button>
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className="form-control mr-2"
-                style={{ width: "60px" }}
-              />
+                Pembelian Obat
+              </h5>
               <button
-                className="btn btn-sm btn-outline-primary"
-                onClick={() =>
-                  setQuantity(quantity < selectedObat.stok ? quantity + 1 : quantity)
-                }
+                className="close"
+                type="button"
+                data-dismiss="modal"
+                aria-label="Close"
               >
-                +
+                <span aria-hidden="true">×</span>
               </button>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Tutup
-            </Button>
-            <Button variant="primary" onClick={addToCart}>
-              Beli
-            </Button>
-          </Modal.Footer>
-        </Modal>    
-      )}
-    </div>
+            <div className="modal-body modal-body-grid">
+              <div className="d-flex flex-wrap">
+                {selectedObat && (
+                  <div className="col-xl-4 col-md-6 mb-4">
+                    <img
+                      src={`http://localhost:8083/obats/gambar/${selectedObat.id}`}
+                      style={{
+                        width: "210px",
+                        height: "210px",
+                        marginBottom: "10px",
+                        display: "block",
+                        border: "2px solid #ccc",
+                        borderRadius: "15px",
+                        margin: "0 auto",
+                      }}
+                    />
+                  </div>
+                )}
+
+                {selectedObat && (
+                  <div className="col-xl-8 col-md-6 mb-4">
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontStyle: "italic",
+                        fontSize: "20px",
+                      }}
+                    >
+                      {selectedObat.namaObat}
+                    </span>
+                    <br />
+                    <span style={{ fontStyle: "italic", fontSize: "15px" }}>
+                      Harga: {formatRupiah(selectedObat.harga)}
+                    </span>{" "}
+                    <br />
+                    <span style={{ fontStyle: "italic", fontSize: "15px" }}>
+                      Stok : {selectedObat.stok}
+                    </span>
+                    <div className="d-flex align-items-center">
+                      <button
+                        className="btn btn-sm btn-outline-primary mr-2"
+                        onClick={() =>
+                          setQuantity(quantity > 1 ? quantity - 1 : 1)
+                        }
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={(e) => setQuantity(parseInt(e.target.value))}
+                        className="form-control mr-2"
+                        style={{ width: "60px" }}
+                      />
+                      <button
+                        className="btn btn-sm btn-outline-primary"
+                        onClick={() =>
+                          setQuantity(
+                            quantity < selectedObat.stok
+                              ? quantity + 1
+                              : quantity
+                          )
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                    <hr />
+                    <a
+                      className="btn btn-sm btn-success btn-icon-split mr-2"
+                      data-toggle="modal"
+                      data-target="#detailModal"
+                      onClick={addToCart}
+                    >
+                      <span className="icon text-white-50">
+                        <i className="fas fa-shopping-cart"></i>
+                      </span>
+                      <span className="text">Beli</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="modal-footer d-flex justify-content-between">
+              <span className="font-weight-bold text-dark mb-1">
+                Total Harga : Rp 25.000
+              </span>
+              <button
+                className="btn btn-secondary"
+                type="button"
+                data-dismiss="modal"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
-export default TabelObat;
+export default Pembelian;

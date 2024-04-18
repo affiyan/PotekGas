@@ -11,6 +11,7 @@ import DataTable from "datatables.net-dt";
 function TabelPembelian() {
   const [pembelians, setPembelians] = useState([]);
   const [detailPembelian, setDetailPembelian] = useState([]);
+  const [totalHargaModal, setTotalHargaModal] = useState(0); // State untuk menyimpan total harga pada modal
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
   const tableRef = useRef(null);
@@ -32,16 +33,16 @@ function TabelPembelian() {
           responsive: true,
           autoWidth: false,
           language: {
-            search: "",                                                 // mengganti teks "Search" menjadi "Cari:"
-            lengthMenu: "Tampilkan _MENU_ data per halaman",            // mengganti teks "Entries per page" dengan teks baru
+            search: "", // mengganti teks "Search" menjadi "Cari:"
+            lengthMenu: "Tampilkan _MENU_ data per halaman", // mengganti teks "Entries per page" dengan teks baru
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data", // mengganti teks info
-            infoEmpty: "Data tidak tersedia",                           // mengganti teks ketika tidak ada data yang tersedia
-            infoFiltered: "(disaring dari _MAX_ total data)",           // mengganti teks ketika data difilter
+            infoEmpty: "Data tidak tersedia", // mengganti teks ketika tidak ada data yang tersedia
+            infoFiltered: "(disaring dari _MAX_ total data)", // mengganti teks ketika data difilter
             paginate: {
-              first: "Pertama",                                         // mengganti teks tombol pertama
-              previous: "Sebelumnya",                                   // mengganti teks tombol sebelumnya
-              next: "Selanjutnya",                                      // mengganti teks tombol selanjutnya
-              last: "Terakhir",                                         // mengganti teks tombol terakhir
+              first: "Pertama", // mengganti teks tombol pertama
+              previous: "Sebelumnya", // mengganti teks tombol sebelumnya
+              next: "Selanjutnya", // mengganti teks tombol selanjutnya
+              last: "Terakhir", // mengganti teks tombol terakhir
             },
           },
           initComplete: function () {
@@ -74,6 +75,13 @@ function TabelPembelian() {
       .then((response) => {
         console.log(response.data.data);
         setDetailPembelian(response.data.data);
+
+        // Hitung total harga dari detail pembelian
+        let totalHarga = 0;
+        response.data.data.forEach((item) => {
+          totalHarga += item.jumlah * item.hargaObat;
+        });
+        setTotalHargaModal(totalHarga);
       })
       .catch((error) => {
         console.log(error);
@@ -227,7 +235,7 @@ function TabelPembelian() {
       >
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
-            {detailPembelian && detailPembelian.length > 0 && (
+            {detailPembelian && detailPembelian.length > 0 ? (
               <div className="modal-header">
                 <h5
                   className="modal-title"
@@ -235,6 +243,24 @@ function TabelPembelian() {
                   style={{ fontWeight: "bold" }}
                 >
                   Detail Pembelian : {detailPembelian[0].idTransaksi}
+                </h5>
+                <button
+                  className="close"
+                  type="button"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            ) : (
+              <div className="modal-header">
+                <h5
+                  className="modal-title"
+                  id="exampleModalLabel"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Detail Pembelian
                 </h5>
                 <button
                   className="close"
@@ -274,7 +300,7 @@ function TabelPembelian() {
             </div>
             <div className="modal-footer d-flex justify-content-between">
               <span className="font-weight-bold text-dark mb-1">
-                Total Harga : Rp 25.000
+              Total Harga : {formatRupiah(totalHargaModal)}
               </span>
               <button
                 className="btn btn-secondary"

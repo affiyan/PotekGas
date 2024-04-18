@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import $ from "jquery";
 import "datatables.net-dt";
 
@@ -82,6 +83,20 @@ function TabelObat() {
     return new Date(expired).toLocaleDateString("id-ID", options);
   };
 
+  function successNotify(message) {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      onClose: () => window.location.reload(),
+    });
+  }
+
   function formObatHandler() {
     navigator("/form-obat");
   }
@@ -101,8 +116,8 @@ function TabelObat() {
 
     if (isConfirmed) {
       deleteObat(obat)
-        .then(() => {
-          loadObats();
+        .then((response) => {
+          successNotify(response.data.message)
         })
         .catch((error) => {
           console.error("Error deleting Obat:", error);
@@ -198,6 +213,7 @@ function TabelObat() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

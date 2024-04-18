@@ -64,7 +64,7 @@ function FormPengguna() {
   function successNotify(message) {
     toast.success(message, {
       position: "top-right",
-      autoClose: 1000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

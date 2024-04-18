@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listUsers, deleteUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import $ from "jquery";
 import DataTable from "datatables.net-dt";
 
@@ -54,6 +55,20 @@ function TabelPengguna() {
     }
   }, [users]);
 
+  function successNotify(message) {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      onClose: () => window.location.reload(),
+    });
+  }
+
   const loadUsers = () => {
     listUsers()
       .then((response) => {
@@ -83,8 +98,8 @@ function TabelPengguna() {
 
     if (isConfirmed) {
       deleteUser(user)
-        .then(() => {
-          loadUsers();
+        .then((response) => {
+          successNotify(response.data.message)
         })
         .catch((error) => {
           console.error("Error deleting user:", error);
@@ -170,6 +185,7 @@ function TabelPengguna() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

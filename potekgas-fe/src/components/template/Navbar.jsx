@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { getUser } from "../../services/UserService"; // Menggunakan getUserById dari UserService
 import { useParams } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, OverlayTrigger, Popover } from "react-bootstrap"; // Tambahkan OverlayTrigger dan Tooltip
 
 function Navbar() {
   const [id, setId] = useState(0);
@@ -14,7 +14,7 @@ function Navbar() {
   const [cartItems, setCartItems] = useState([]);
   const [userId, setUserId] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = Cookies.get("user");
@@ -22,7 +22,7 @@ function Navbar() {
       if (userData != null) {
         const userObj = JSON.parse(userData);
         const userId = userObj[0].id;
-        setId(userObj[0].id)
+        setId(userObj[0].id);
         setUserId(userId);
 
         try {
@@ -47,10 +47,17 @@ function Navbar() {
   }, [id]);
 
   useEffect(() => {
-    const totalQuantity = cartItems.reduce((total, item) => total + item.kuantitas, 0);
-    setCartItemCount(totalQuantity);
+    const totalQuantity = 4;
+    const cartItem = Cookies.get("cartItems")
+    if (cartItem != null){
+      const cartItems = JSON.parse(cartItem);
+      setCartItemCount(cartItems.length);
+    } else {
+      setCartItemCount(0);
+
+    }
   }, [cartItems]);
-  
+
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
       <button
@@ -90,7 +97,7 @@ function Navbar() {
           >
             <i className="fas fa-search fa-fw"></i>
           </a>
-          
+
           <div
             className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
             aria-labelledby="searchDropdown"
@@ -123,6 +130,8 @@ function Navbar() {
           </a>
         </div>
 
+       
+
         <div className="topbar-divider d-none d-sm-block"></div>
 
         <li className="nav-item dropdown no-arrow">
@@ -144,7 +153,11 @@ function Navbar() {
             </span>
             <img
               className="img-profile rounded-circle"
-              src={foto !== null ? `http://localhost:8083/users/foto/${id}` : '../public/assets/img/undraw_profile.svg'}
+              src={
+                foto !== null
+                  ? `http://localhost:8083/users/foto/${id}`
+                  : "../public/assets/img/undraw_profile.svg"
+              }
               alt="Profile"
             />
           </a>
