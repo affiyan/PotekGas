@@ -25,7 +25,9 @@ function FormObat() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isUpdateMode) {
+    if (!isUpdateMode) {
+      setTgl_kadaluarsa(getTodayDate()); // Set tanggal kadaluarsa ke hari ini jika sedang dalam mode create
+    } else {
       getObatById(id)
         .then((response) => {
           const obatData = response.data.data[0];
@@ -50,6 +52,14 @@ function FormObat() {
         });
     }
   }, [isUpdateMode, id]);
+
+  function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   function warningNotify(message) {
     toast.warn(message, {
