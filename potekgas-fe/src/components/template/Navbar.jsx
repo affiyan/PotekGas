@@ -8,11 +8,12 @@ import {
   savePembelian,
   saveDetailPembelian,
   countPembelian,
+  updateStokObat 
 } from "../../services/PembelianService";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
+import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 
 function Navbar() {
@@ -149,30 +150,39 @@ function Navbar() {
 
   function saveTransaksi(e) {
     e.preventDefault();
-
+  
+    // Mendapatkan data transaksi
     const formDataPembelian = [
       { idTransaksi: idTransaksi, idUser: userId, totalHarga: totalHarga },
     ];
+  
+    // Mendapatkan data detail pembelian dari keranjang
     const mappedDataDetail = cartItems.map((item) => ({
       idDetail: 0,
-      idTransaksi: idTransaksi, // ganti dengan properti yang sesuai untuk id transaksi
+      idTransaksi: idTransaksi,
       idObat: item.id_obat,
       jumlah: item.kuantitas,
     }));
-
-    if (mappedDataDetail.length == 0) {
+  
+    if (mappedDataDetail.length === 0) {
       warningNotify("Harap Memilih Obat!");
     } else {
-      savePembelian(formDataPembelian[0]) // Tambahkan formData sebagai parameter pertama
+      savePembelian(formDataPembelian[0])
         .then((response) => {
           const status = response.data.status;
           const message = response.data.message;
           if (status === 200) {
             setMessage(message);
-            saveDetailPembelian(mappedDataDetail) // Tambahkan formData sebagai parameter pertama
+            saveDetailPembelian(mappedDataDetail)
               .then((response) => {
                 const status = response.data.status;
                 if (status === 200) {
+                  // Transaksi berhasil, kurangi stok obat
+                  cartItems.forEach((item) => {
+                    const newStock = item.stok - item.kuantitas;
+                    // Panggil service untuk mengupdate stok obat
+                    updateStokObat(item.id_obat, newStock)
+                  });
                   successNotify(message);
                 } else {
                   warningNotify(message);
@@ -181,18 +191,18 @@ function Navbar() {
               .catch((error) => {
                 console.error("Error saving Obat:", error);
               });
-          } else {
-            warningNotify(message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving Obat:", error);
-        });
-
+            } else {
+              warningNotify(message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving Obat:", error);
+          });
+  
       Cookies.remove("cartItems");
     }
   }
-
+  
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
       {/* Tombol sidebar */}
