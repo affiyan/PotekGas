@@ -2,9 +2,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Toast } from "react-bootstrap";
 import gambar from "../../assets/paracetramol.jpg";
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Pembelian() {
   const [obats, setObats] = useState([]);
@@ -12,6 +14,9 @@ function Pembelian() {
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
+  const [toastShow, setToastShow] = useState(false); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const navigator = useNavigate();
 
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -56,6 +61,13 @@ function Pembelian() {
     setSelectedObat(obat);
     // setShowModal(true);
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = obats.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Mengubah halaman
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -126,7 +138,7 @@ function Pembelian() {
             <hr />
 
             <div className="row">
-              {obats.map((obat, index) => (
+              {currentItems.map((obat, index) => (
                 <div className="col-lg-4 mb-4" key={obat.id}>
                   <div className="card shadow">
                     <div className="card-body d-flex justify-content-center align-items-center">
@@ -161,23 +173,43 @@ function Pembelian() {
                       </p>
                       <p className="card-text">Stok: {obat.stok}</p>
                       <div className="text-center">
-                        <a
+                        {/* Menambahkan kondisi untuk menonaktifkan tombol beli jika stok 0 */}
+                        <button
                           className="btn btn-sm btn-success btn-icon-split mr-2"
                           data-toggle="modal"
                           data-target="#detailModal"
                           onClick={() => handleBeli(obat)}
+                          disabled={obat.stok === 0}
                         >
                           <span className="icon text-white-50">
                             <i className="fas fa-shopping-cart"></i>
                           </span>
                           <span className="text">Beli</span>
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
+            {/* Tambahkan navigasi untuk pagination */}
+            <nav>
+              <ul className="pagination justify-content-center">
+                {Array(Math.ceil(obats.length / itemsPerPage))
+                  .fill()
+                  .map((_, index) => (
+                    <li key={index} className="page-item">
+                      <button
+                        className="page-link"
+                        onClick={() => paginate(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </div>

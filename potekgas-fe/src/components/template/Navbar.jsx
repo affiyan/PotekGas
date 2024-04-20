@@ -8,7 +8,6 @@ import {
   savePembelian,
   saveDetailPembelian,
   countPembelian,
-  updateStokObat 
 } from "../../services/PembelianService";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -44,6 +43,11 @@ function Navbar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+   // Fungsi untuk menghapus cookies cartItems saat logout
+   const handleLogout = () => {
+    Cookies.remove("cartItems");
   };
 
   const open = Boolean(anchorEl);
@@ -180,8 +184,7 @@ function Navbar() {
                   // Transaksi berhasil, kurangi stok obat
                   cartItems.forEach((item) => {
                     const newStock = item.stok - item.kuantitas;
-                    // Panggil service untuk mengupdate stok obat
-                    updateStokObat(item.id_obat, newStock)
+
                   });
                   successNotify(message);
                 } else {
@@ -408,6 +411,7 @@ function Navbar() {
               href="#"
               data-toggle="modal"
               data-target="#logoutModal"
+              onClick={handleLogout} 
             >
               <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
               Logout

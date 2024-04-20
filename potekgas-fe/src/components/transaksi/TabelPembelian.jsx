@@ -191,7 +191,7 @@ function TabelPembelian() {
                               </span>
                               <span className="text">View</span>
                             </a>{" "}
-                            <a
+                            {/* <a
                               className="btn btn-sm btn-warning btn-icon-split"
                               onClick={() => updatePembelianHandler(pembelian)}
                             >
@@ -208,7 +208,7 @@ function TabelPembelian() {
                                 <i className="fas fa-trash"></i>
                               </span>
                               <span className="text">Hapus</span>
-                            </a>
+                            </a> */}
                           </td>
                         </tr>
                       ))}
