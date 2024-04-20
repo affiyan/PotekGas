@@ -160,7 +160,6 @@ function TabelPembelian() {
                     <thead>
                       <tr className="text-center">
                         <th className="text-center">No</th>
-                        <th className="text-center">ID Transaksi</th>
                         <th className="text-center">Nama User</th>
                         <th className="text-center">Tanggal Pembelian</th>
                         <th className="text-center">Total Harga</th>
@@ -171,9 +170,6 @@ function TabelPembelian() {
                       {pembelians.map((pembelian, index) => (
                         <tr key={pembelian.idTransaksi} className="text-center">
                           <td className="text-center">{index + 1}</td>
-                          <td className="text-center">
-                            {pembelian.idTransaksi}
-                          </td>
                           <td className="text-center">{pembelian.namaUser}</td>
                           <td className="text-center">
                             {formatDate(pembelian.tglPembelian)}
@@ -242,7 +238,7 @@ function TabelPembelian() {
                   id="exampleModalLabel"
                   style={{ fontWeight: "bold" }}
                 >
-                  Detail Pembelian : {detailPembelian[0].idTransaksi}
+                  Detail Pembelian
                 </h5>
                 <button
                   className="close"

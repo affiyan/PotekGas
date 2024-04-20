@@ -8,10 +8,13 @@ import {
   getBestSellerObat,
 } from "../services/PembelianService";
 import { Collapse } from "react-bootstrap";
+import { PieChart } from "@mui/x-charts/PieChart";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { BarChart } from "@mui/x-charts/BarChart";
+import { axisClasses } from "@mui/x-charts/ChartsAxis";
 
 function Dashboard() {
-  const areaChartRef = useRef(null);
-  const pieChartRef = useRef(null);
   const [admin, setAdmin] = useState(0);
   const [kasir, setKasir] = useState(0);
   const [obat, setObat] = useState(0);
@@ -19,6 +22,12 @@ function Dashboard() {
   const [obatBestSeller, setObatBestSeller] = useState([]);
   const [jumlahObatBestSeller, setJumlahObatBestSeller] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
+
+  const data = [
+    { id: 0, value: jumlahObatBestSeller[0], label: obatBestSeller[0] },
+    { id: 1, value: jumlahObatBestSeller[1], label: obatBestSeller[1] },
+    { id: 2, value: jumlahObatBestSeller[2], label: obatBestSeller[2] },
+  ];
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
@@ -102,156 +111,81 @@ function Dashboard() {
       }
       return s.join(dec);
     }
-
-    // Inisialisasi chart area
-    const ctxArea = areaChartRef.current.getContext("2d");
-    var myAreaChart = new Chart(ctxArea, {
-      type: "line",
-      data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        datasets: [
-          {
-            label: "Earnings",
-            lineTension: 0.3,
-            backgroundColor: "rgba(78, 115, 223, 0.05)",
-            borderColor: "rgba(78, 115, 223, 1)",
-            pointRadius: 3,
-            pointBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointBorderColor: "rgba(78, 115, 223, 1)",
-            pointHoverRadius: 6,
-            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-            pointHitRadius: 10,
-            pointBorderWidth: 2,
-            data: [
-              0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
-              25000, 40000,
-            ],
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            left: 10,
-            right: 25,
-            top: 25,
-            bottom: 0,
-          },
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false, // Menghapus gridlines pada sumbu x
-              drawBorder: true,
-            },
-            ticks: {
-              maxTicksLimit: 12,
-            },
-          },
-          y: {
-            grid: {
-              display: true, // Menghapus gridlines pada sumbu x
-              drawBorder: false,
-            },
-            ticks: {
-              maxTicksLimit: 5,
-              padding: 10,
-              // Memanggil fungsi numberFormat untuk menambahkan simbol dolar
-              callback: function (value, index, values) {
-                return "$" + number_format(value);
-              },
-            },
-            gridLines: {
-              color: "rgb(234, 236, 244)",
-              zeroLineColor: "rgb(234, 236, 244)",
-              drawBorder: false,
-              borderDash: [2],
-              zeroLineBorderDash: [2],
-            },
-          },
-        },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          backgroundColor: "rgb(255,255,255)",
-          bodyFontColor: "#858796",
-          titleMarginBottom: 10,
-          titleFontColor: "#6e707e",
-          titleFontSize: 14,
-          borderColor: "#dddfeb",
-          borderWidth: 1,
-          xPadding: 15,
-          yPadding: 15,
-          displayColors: false,
-          intersect: false,
-          mode: "index",
-          caretPadding: 10,
-          callbacks: {
-            label: function (tooltipItem, chart) {
-              var datasetLabel =
-                chart.datasets[tooltipItem.datasetIndex].label || "";
-              return datasetLabel + ": $" + number_format(tooltipItem.yLabel);
-            },
-          },
-        },
-      },
-    });
-
-    // Inisialisasi chart pie
-    const ctxPie = pieChartRef.current.getContext("2d");
-    var myPieChart = new Chart(ctxPie, {
-      type: "doughnut",
-      data: {
-        labels: obatBestSeller,
-        datasets: [
-          {
-            data: jumlahObatBestSeller,
-            backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
-            hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
-            hoverBorderColor: "rgba(234, 236, 244, 1)",
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        tooltips: {
-          backgroundColor: "rgb(255,255,255)",
-          bodyFontColor: "#858796",
-          borderColor: "#dddfeb",
-          borderWidth: 1,
-          xPadding: 15,
-          yPadding: 15,
-          displayColors: false,
-          caretPadding: 10,
-        },
-        legend: {
-          display: false,
-        },
-        cutoutPercentage: 80,
-      },
-    });
-
+    
     return () => {
-      myAreaChart.destroy();
-      myPieChart.destroy();
+      // myAreaChart.destroy();
+      // myPieChart.destroy();
     };
   }, [obatBestSeller, jumlahObatBestSeller]);
+
+  const dataset = [
+    {
+      transaksi: 21,
+      month: "Jan",
+    },
+    {
+      transaksi: 28,
+      month: "Feb",
+    },
+    {
+      transaksi: 41,
+      month: "Mar",
+    },
+    {
+      transaksi: 73,
+      month: "Apr",
+    },
+    {
+      transaksi: 99,
+      month: "May",
+    },
+    {
+      transaksi: 144,
+      month: "June",
+    },
+    {
+      transaksi: 319,
+      month: "July",
+    },
+    {
+      transaksi: 249,
+      month: "Aug",
+    },
+    {
+      transaksi: 131,
+      month: "Sept",
+    },
+    {
+      transaksi: 55,
+      month: "Oct",
+    },
+    {
+      transaksi: 48,
+      month: "Nov",
+    },
+    {
+      transaksi: 25,
+      month: "Dec",
+    },
+  ];
+
+  const valueFormatter = (value) => `${value}mm`;
+
+  const chartSetting = {
+    yAxis: [
+      {
+        label: "Jumlah",
+      },
+    ],
+    series: [{ dataKey: "transaksi", label: "Jumlah Transaksi", valueFormatter }],
+    height: 320,
+    
+    sx: {
+      [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
+        transform: "translateX(-10px)",
+      },
+    },
+  };
 
   return (
     <>
@@ -351,15 +285,17 @@ function Dashboard() {
                 </h6>
               </div>
               <div className="card-body">
-                <div className="chart-area">
-                  <canvas
-                    id="myAreaChart"
-                    ref={areaChartRef}
-                    className="chartjs-render-monitor"
-                    width="943"
-                    height="467"
-                    // style="display: block;height: 320px;width: 645px;"
-                  ></canvas>
+                <div style={{ width: "100%" }}>
+                  <BarChart
+                    dataset={dataset}
+                    xAxis={[
+                      {
+                        scaleType: "band",
+                        dataKey: "month",
+                      },
+                    ]}
+                    {...chartSetting}
+                  />
                 </div>
               </div>
             </div>
@@ -373,25 +309,56 @@ function Dashboard() {
                 </h6>
               </div>
               <div className="card-body">
-                <div className="chart-pie pt-4 pb-2">
-                  <canvas ref={pieChartRef}></canvas>
-                </div>
-                <div className="mt-4 text-center small">
-                  {/* Mengubah label pada chart pie sesuai dengan data obatBestSeller */}
-                  {/* {obatBestSeller.map((obat, index) => (
-                    <span key={index} className="mr-2">
-                      <i
-                        className={`fas fa-circle text-${
-                          index === 0
-                            ? "primary"
-                            : index === 1
-                            ? "success"
-                            : "info"
-                        }`}
-                      ></i>{" "}
-                      {obat}
-                    </span>
-                  ))} */}
+                <div className="mt-0 text-center small">
+                  {obatBestSeller.length >= 1 && (
+                    <Stack direction="row" spacing={1}>
+                      <Chip
+                        label={obatBestSeller[0]}
+                        sx={{ color: "white", backgroundColor: "#02b2af" }}
+                      />
+                    </Stack>
+                  )}
+                  <br />
+                  {obatBestSeller.length >= 2 && (
+                    <Stack direction="row" spacing={1}>
+                      <Chip
+                        label={obatBestSeller[1]}
+                        sx={{ color: "white", backgroundColor: "#2e96ff" }}
+                      />
+                    </Stack>
+                  )}
+                  <br />
+                  {obatBestSeller.length >= 3 && (
+                    <Stack direction="row" spacing={1}>
+                      <Chip
+                        label={obatBestSeller[2]}
+                        sx={{ color: "white", backgroundColor: "#b800d8" }}
+                      />
+                    </Stack>
+                  )}
+
+                  <PieChart
+                    series={[
+                      {
+                        data,
+                        highlightScope: {
+                          faded: "global",
+                          highlighted: "item",
+                        },
+                        faded: {
+                          innerRadius: 30,
+                          additionalRadius: -30,
+                          color: "#3c62d2",
+                        },
+                      },
+                    ]}
+                    width={400}
+                    height={200}
+                    slotProps={{
+                      legend: { hidden: true },
+                      // position: 'start'
+                    }}
+                  />
                   <br />
                 </div>
               </div>

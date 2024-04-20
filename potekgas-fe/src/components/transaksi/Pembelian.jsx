@@ -78,24 +78,39 @@ function Pembelian() {
   }, []);
   
   const addToCart = () => {
-    const newItem = {
-      id_obat: selectedObat.id,
-      namaObat: selectedObat.namaObat,
-      kuantitas: quantity,
-      total_harga: selectedObat.harga * quantity,
-      tanggal_transaksi: new Date().toISOString(),
-      gambar: selectedObat.gambar, // Menyimpan URL gambar atau path file
-    };
+    // Cek apakah item sudah ada di dalam keranjang
+    const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
+    
+    if (existingItemIndex !== -1) {
+      // Jika item sudah ada di dalam keranjang, update stok-nya
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingItemIndex].kuantitas += quantity;
+      updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
   
-    // Tambahkan item baru ke data cartItems yang sudah ada
-    const updatedCartItems = [...cartItems, newItem];
-    setCartItems(updatedCartItems);
+      // Simpan data cartItems yang sudah diperbarui ke dalam cookies
+      Cookies.set("cartItems", JSON.stringify(updatedCartItems));
+      setCartItems(updatedCartItems);
+    } else {
+      // Jika item belum ada di dalam keranjang, tambahkan sebagai item baru
+      const newItem = {
+        id_obat: selectedObat.id,
+        namaObat: selectedObat.namaObat,
+        kuantitas: quantity,
+        total_harga: selectedObat.harga * quantity,
+        tanggal_transaksi: new Date().toISOString(),
+        gambar: selectedObat.gambar, // Menyimpan URL gambar atau path file
+      };
   
-    // Simpan data cartItems yang sudah diperbarui ke dalam cookies
-    Cookies.set("cartItems", JSON.stringify(updatedCartItems));
-    window.location.reload();
-  };
+      // Tambahkan item baru ke data cartItems yang sudah ada
+      const updatedCartItems = [...cartItems, newItem];
+      setCartItems(updatedCartItems);
   
+      // Simpan data cartItems yang sudah diperbarui ke dalam cookies
+      Cookies.set("cartItems", JSON.stringify(updatedCartItems));
+    }
+  
+    window.location.reload(); // Refresh halaman untuk menampilkan perubahan
+  };  
   
 
   return (

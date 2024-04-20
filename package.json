@@ -1,6 +1,13 @@
 {
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-charts": "^7.3.0",
     "bootstrap-icons": "^1.11.3",
-    "datatables.net-dt": "^2.0.3"
+    "datatables.net-dt": "^2.0.3",
+    "styled-components": "^6.1.8"
   }
 }

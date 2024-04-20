@@ -12,4 +12,5 @@ export const getDetailPembelianById = (id) => axios.get(REST_API_BASE_URL + `det
 export const getPembelianById = (id) => axios.get(REST_API_BASE_URL + `pembelian/getPembelian/${id}`);
 // export const getPembelian = (id) => axios.post(REST_API_BASE_URL + 'getPembelian', id);
 export const getPembelian = (id) => axios.get(`${REST_API_BASE_URL}pembelian/getPembelian?id=${id}`);
-export const createPembelian = (Pembelian) => axios.post(REST_API_BASE_URL + 'pembelian/savePembelian', Pembelian)
+export const savePembelian = (Pembelian) => axios.post(REST_API_BASE_URL + 'pembelian/savePembelian', Pembelian)
+export const saveDetailPembelian = (detailPembelian) => axios.post(REST_API_BASE_URL + 'detailPembelian/saveDetailPembelian', detailPembelian)

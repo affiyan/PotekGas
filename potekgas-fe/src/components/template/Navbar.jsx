@@ -4,12 +4,16 @@ import Cookies from "js-cookie";
 import { getUser } from "../../services/UserService"; // Menggunakan getUserById dari UserService
 import { useParams } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-// import {
-//   savePembelian,
-//   saveDetailPembelian,
-// } from "../../services/PembelianService";
+import {
+  savePembelian,
+  saveDetailPembelian,
+  countPembelian,
+} from "../../services/PembelianService";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+
+import { ToastContainer, toast } from "react-toastify";
 
 function Navbar() {
   const [id, setId] = useState(0);
@@ -17,8 +21,11 @@ function Navbar() {
   const [role, setRole] = useState("");
   const [foto, setFoto] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [idTransaksi, setIdTransaksi] = useState(0);
   const [userId, setUserId] = useState(null);
+  const [totalHarga, setTotalHarga] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [message, setMessage] = useState();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -30,7 +37,16 @@ function Navbar() {
     setAnchorEl(null);
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const open = Boolean(anchorEl);
+  const idpopover = open ? "simple-popover" : undefined;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,11 +64,6 @@ function Navbar() {
           setFoto(responseData.foto);
           setNama(responseData.nama);
           setRole(responseData.role);
-          // if (responseData.role === "1") {
-          //   setRole("Admin");
-          // } else if (responseData.role === "2") {
-          //   setRole("Kasir");
-          // }
         } catch (error) {
           // Sembunyikan pesan kesalahan dari console.log
           console.error("Error fetching user data:", error);
@@ -67,7 +78,6 @@ function Navbar() {
     const cartItem = Cookies.get("cartItems");
     if (cartItem != null) {
       const cartItems = JSON.parse(cartItem);
-      console.log("Cart Items:", cartItems); // Debugging log
       setCartItems(cartItems);
       setCartItemCount(cartItems.length);
     } else {
@@ -84,8 +94,104 @@ function Navbar() {
     return formatter.format(total_harga);
   };
 
+  function warningNotify(message) {
+    toast.warn(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
 
-  
+  function successNotify(message) {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      onClose: () => window.location.reload(),
+    });
+  }
+
+  useEffect(() => {
+    const getTotalHarga = () => {
+      let total = 0;
+      cartItems.forEach((item) => {
+        total += item.total_harga;
+      });
+      return total;
+    };
+
+    // Menggunakan fungsi getTotalHarga untuk menghitung total harga
+    setTotalHarga(getTotalHarga());
+  }, [cartItems]);
+
+  useEffect(() => {
+    countPembelian()
+      .then((response) => {
+        setIdTransaksi(response.data.data[0] + 1);
+      })
+      .catch((error) => {
+        console.error("Error saving Obat:", error);
+      });
+
+    countPembelian();
+  }, []);
+  // console.log(cartItems)
+
+  function saveTransaksi(e) {
+    e.preventDefault();
+
+    const formDataPembelian = [
+      { idTransaksi: idTransaksi, idUser: userId, totalHarga: totalHarga },
+    ];
+    const mappedDataDetail = cartItems.map((item) => ({
+      idDetail: 0,
+      idTransaksi: idTransaksi, // ganti dengan properti yang sesuai untuk id transaksi
+      idObat: item.id_obat,
+      jumlah: item.kuantitas,
+    }));
+
+    if (mappedDataDetail.length == 0) {
+      warningNotify("Harap Memilih Obat!");
+    } else {
+      savePembelian(formDataPembelian[0]) // Tambahkan formData sebagai parameter pertama
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            setMessage(message);
+            saveDetailPembelian(mappedDataDetail) // Tambahkan formData sebagai parameter pertama
+              .then((response) => {
+                const status = response.data.status;
+                if (status === 200) {
+                  successNotify(message);
+                } else {
+                  warningNotify(message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error saving Obat:", error);
+              });
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving Obat:", error);
+        });
+
+      Cookies.remove("cartItems");
+    }
+  }
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -118,13 +224,11 @@ function Navbar() {
       {/* Tombol keranjang */}
       <ul className="navbar-nav ml-auto">
         {/* Tombol keranjang dropdown */}
-        <div className="nav-item mx-1">
+        <div className="nav-item">
           <a
+            aria-describedby={idpopover}
             className="nav-link"
-            aria-owns={open ? "mouse-over-popover" : undefined}
-            aria-haspopup="true"
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
+            onClick={handleClick}
           >
             <FaShoppingCart />
             <span className="badge badge-danger badge-counter">
@@ -132,55 +236,127 @@ function Navbar() {
             </span>
           </a>
           <Popover
-            id="mouse-over-popover"
-            sx={{
-              pointerEvents: "none",
-            }}
+            id={idpopover}
             open={open}
             anchorEl={anchorEl}
+            onClose={handleClose}
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "left",
             }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
+            PaperProps={{
+              style: {
+                maxWidth: "500px", // Atur lebar maksimum popover
+                width: "100%", // Atur lebar popover agar selalu 100% dari lebar maksimum
+              },
             }}
-            onClose={handlePopoverClose}
-            disableRestoreFocus
           >
-            <div>
-              <div style={{ marginTop: "10px", marginLeft: "10px", color: "#999" }}>Baru ditambahkan</div>
-            </div>
-            <div style={{ padding: "10px", minWidth: "400px" }}>
+           <div className="modal-header">
+                <h5
+                  className="modal-title"
+                  id="exampleModalLabel"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Detail Pembelian : 
+                </h5>
+                <button
+                  className="close"
+                  type="button"
+                  onClick={handleClose}
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            <div
+            className="modal-body"
+              style={{
+                padding: "10px",
+                minWidth: "400px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               {cartItems.length > 0 ? (
                 cartItems.map((item, index) => (
-                  <div key={index} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-                    <div style={{ border: "1px solid #ddd", padding: "5px", borderRadius: "5px" }}>
-                      <img src={item.gambarUrl || `http://localhost:8083/obats/gambar/${item.id_obat}`} alt={item.namaObat} style={{ width: "100px", height: "100px", marginRight: "10px" }} />
+                  <span
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginRight: "20px",
+                      marginLeft: "20px",
+                      justifyContent: "space-between", // Menempatkan harga obat di sebelah kanan
+                    }}
+                  >
+                    <img
+                      src={
+                        item.gambarUrl ||
+                        `http://localhost:8083/obats/gambar/${item.id_obat}`
+                      }
+                      alt={"... ......"}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "5px",
+                        // marginRight: "20px",
+                      }}
+                    />
+                    <span style={{ marginLeft: "10px", marginRight: "50px" }}>
+                      {item.namaObat} x {item.kuantitas}
+                    </span>
+                    <div style={{ textAlign: "right" }}>
+                      <span
+                        style={{
+                          color: "#2850c3",
+                          fontSize: "12.5px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {formatRupiah(item.total_harga)}
+                      </span>
                     </div>
-                    <div style={{ marginLeft: "10px", marginRight: "50px" }}> 
-                      <div>{item.namaObat}</div>
-                    </div>
-                    <div>
-                    <div style={{ color: "#6f42c1" }}> {formatRupiah(item.total_harga)}</div>
-                    </div>
-                  </div>
+                  </span>
                 ))
               ) : (
                 <div>No items in cart</div>
               )}
-            </div><br></br><br></br>
-            <div style={{ position: "absolute", bottom: 0, right: 0, marginTop: "100px", marginBottom: "10px", marginRight: "10px" }}>
-              <button className="btn btn-primary">Checkout</button>
+            </div>
+            <hr />
+            <div
+              style={{
+                padding: "10px",
+                minWidth: "400px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div className="row">
+                <div className="col">
+                  {" "}
+                  <span style={{ textAlign: "left" }}>
+                    Total :{" "}
+                    <span
+                      style={{
+                        color: "#2850c3",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {formatRupiah(totalHarga)}
+                    </span>
+                  </span>
+                </div>
+                <div className="col" style={{ textAlign: "right" }}>
+                  {" "}
+                  <button className="btn btn-primary" onClick={saveTransaksi}>
+                    Checkout
+                  </button>
+                </div>
+              </div>
             </div>
           </Popover>
         </div>
-
-        {/* Tombol beli */}
-        <li className="nav-item">
-          <a className="nav-link">Beli</a>
-        </li>
+        <ToastContainer />
 
         {/* Divider */}
         <div className="topbar-divider d-none d-sm-block"></div>
