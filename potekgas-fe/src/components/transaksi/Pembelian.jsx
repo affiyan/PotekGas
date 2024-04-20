@@ -295,7 +295,6 @@ function Pembelian() {
             </div>
             <div className="modal-footer d-flex justify-content-between">
               <span className="font-weight-bold text-dark mb-1">
-                Total Harga : Rp 25.000
               </span>
               <button
                 className="btn btn-secondary"
