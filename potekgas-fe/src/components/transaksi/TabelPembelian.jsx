@@ -139,16 +139,6 @@ function TabelPembelian() {
             </div>
             <hr />
 
-            <a
-              className="btn btn-sm btn-primary btn-icon-split mb-3"
-              onClick={formPembelianHandler}
-            >
-              <span className="icon text-white-50">
-                <i className="fas fa-plus"></i>
-              </span>
-              <span className="text">Tambah Pembelian</span>
-            </a>
-
             <div className="card shadow mb-4">
               <div className="card-body">
                 <div className="table-responsive">

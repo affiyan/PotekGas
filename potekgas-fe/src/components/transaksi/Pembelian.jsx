@@ -4,9 +4,9 @@ import { listObats, deleteObat } from "../../services/ObatService";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button, Toast } from "react-bootstrap";
 import gambar from "../../assets/paracetramol.jpg";
-import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Pembelian() {
   const [obats, setObats] = useState([]);
@@ -14,10 +14,11 @@ function Pembelian() {
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
-  const [toastShow, setToastShow] = useState(false); 
+  const [toastShow, setToastShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const navigator = useNavigate();
+  const [isQuantityExceeded, setIsQuantityExceeded] = useState(false); // State untuk menandai apakah jumlah melebihi stok
 
   const [cartItemCount, setCartItemCount] = useState(0);
 
@@ -33,6 +34,19 @@ function Pembelian() {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleQuantityChange = (e) => {
+    const inputQuantity = parseInt(e.target.value);
+    const maxQuantity = selectedObat.stok; // Ambil nilai maksimum dari jumlah stok
+
+    if (inputQuantity > maxQuantity) {
+      // Jika jumlah melebihi stok, atur nilai input menjadi maksimum stok yang tersedia
+      setQuantity(maxQuantity);
+    } else {
+      // Jika jumlah tidak melebihi stok, atur nilai input sesuai dengan nilai yang dimasukkan pengguna
+      setQuantity(inputQuantity);
+    }
   };
 
   const formatRupiah = (harga) => {
@@ -88,17 +102,20 @@ function Pembelian() {
       setCartItems(JSON.parse(existingCartItems));
     }
   }, []);
-  
+
   const addToCart = () => {
     // Cek apakah item sudah ada di dalam keranjang
-    const existingItemIndex = cartItems.findIndex(item => item.id_obat === selectedObat.id);
-    
+    const existingItemIndex = cartItems.findIndex(
+      (item) => item.id_obat === selectedObat.id
+    );
+
     if (existingItemIndex !== -1) {
       // Jika item sudah ada di dalam keranjang, update stok-nya
       const updatedCartItems = [...cartItems];
       updatedCartItems[existingItemIndex].kuantitas += quantity;
-      updatedCartItems[existingItemIndex].total_harga += selectedObat.harga * quantity;
-  
+      updatedCartItems[existingItemIndex].total_harga +=
+        selectedObat.harga * quantity;
+
       // Simpan data cartItems yang sudah diperbarui ke dalam cookies
       Cookies.set("cartItems", JSON.stringify(updatedCartItems));
       setCartItems(updatedCartItems);
@@ -112,18 +129,17 @@ function Pembelian() {
         tanggal_transaksi: new Date().toISOString(),
         gambar: selectedObat.gambar, // Menyimpan URL gambar atau path file
       };
-  
+
       // Tambahkan item baru ke data cartItems yang sudah ada
       const updatedCartItems = [...cartItems, newItem];
       setCartItems(updatedCartItems);
-  
+
       // Simpan data cartItems yang sudah diperbarui ke dalam cookies
       Cookies.set("cartItems", JSON.stringify(updatedCartItems));
     }
-  
+
     window.location.reload(); // Refresh halaman untuk menampilkan perubahan
-  };  
-  
+  };
 
   return (
     <>
@@ -292,10 +308,18 @@ function Pembelian() {
                         type="number"
                         min="1"
                         value={quantity}
-                        onChange={(e) => setQuantity(parseInt(e.target.value))}
-                        className="form-control mr-2"
+                        onChange={handleQuantityChange}
+                        className={`form-control mr-2 ${
+                          isQuantityExceeded ? "is-invalid" : ""
+                        }`} // Menambahkan kelas 'is-invalid' jika jumlah melebihi stok
                         style={{ width: "60px" }}
                       />
+
+                      {isQuantityExceeded && (
+                        <div className="invalid-feedback">
+                          Jumlah melebihi stok yang tersedia
+                        </div>
+                      )}
                       <button
                         className="btn btn-sm btn-outline-primary"
                         onClick={() =>
@@ -326,8 +350,7 @@ function Pembelian() {
               </div>
             </div>
             <div className="modal-footer d-flex justify-content-between">
-              <span className="font-weight-bold text-dark mb-1">
-              </span>
+              <span className="font-weight-bold text-dark mb-1"></span>
               <button
                 className="btn btn-secondary"
                 type="button"
