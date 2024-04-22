@@ -101,9 +101,9 @@ const Sidebar = () => {
             <Link className="collapse-item" to="/data-pembelian">
               Transaksi Pembelian
             </Link>
-            <Link className="collapse-item" to="/data-detailpembelian">
+            {/* <Link className="collapse-item" to="/data-detailpembelian">
               Detail Pembelian
-            </Link>
+            </Link> */}
             <Link className="collapse-item" to="/form-Pembelian">
               Pembelian
             </Link>

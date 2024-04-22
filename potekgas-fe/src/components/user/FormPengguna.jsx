@@ -201,7 +201,7 @@ function FormPengguna() {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                <div className="col-sm-6 ">
+                <div className="col-sm-6 " hidden>
                   <input
                     type={showPassword ? "text" : "password"}
                     className="form-control form-control-user"
