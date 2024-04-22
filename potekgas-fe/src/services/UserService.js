@@ -12,3 +12,4 @@ export const createUser = (user, param) => axios.post(REST_API_BASE_URL + 'saveU
 export const updateUser = (user, param) => axios.post(REST_API_BASE_URL + 'updateUser', user, { params: param });
 export const deleteUser = (user) => axios.post(REST_API_BASE_URL + 'deleteUser', user)
 export const login = (user) => axios.post(REST_API_BASE_URL + 'login', user)
+export const checkToken = (token) => axios.get(REST_API_BASE_URL + 'decodeToken', { params: { token } });
