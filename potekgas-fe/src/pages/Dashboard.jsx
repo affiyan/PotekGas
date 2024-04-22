@@ -111,7 +111,7 @@ function Dashboard() {
       }
       return s.join(dec);
     }
-    
+
     return () => {
       // myAreaChart.destroy();
       // myPieChart.destroy();
@@ -177,9 +177,11 @@ function Dashboard() {
         label: "Jumlah",
       },
     ],
-    series: [{ dataKey: "transaksi", label: "Jumlah Transaksi", valueFormatter }],
+    series: [
+      { dataKey: "transaksi", label: "Jumlah Transaksi", valueFormatter },
+    ],
     height: 320,
-    
+
     sx: {
       [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
         transform: "translateX(-10px)",
@@ -277,31 +279,7 @@ function Dashboard() {
         </div>
 
         <div className="row">
-          <div className="col-xl-8 col-lg-7">
-            <div className="card shadow mb-4">
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 className="m-0 font-weight-bold text-primary">
-                  Total Penjualan
-                </h6>
-              </div>
-              <div className="card-body">
-                <div style={{ width: "100%" }}>
-                  <BarChart
-                    dataset={dataset}
-                    xAxis={[
-                      {
-                        scaleType: "band",
-                        dataKey: "month",
-                      },
-                    ]}
-                    {...chartSetting}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-xl-4 col-lg-5">
+          <div className="col">
             <div className="card shadow mb-4">
               <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 className="m-0 font-weight-bold text-primary">
@@ -309,7 +287,9 @@ function Dashboard() {
                 </h6>
               </div>
               <div className="card-body">
-                <div className="mt-0 text-center small">
+                <div className="row">
+                  <div className="col-4">
+                  <div className="mt-0 text-center small">
                   {obatBestSeller.length >= 1 && (
                     <Stack direction="row" spacing={1}>
                       <Chip
@@ -336,8 +316,8 @@ function Dashboard() {
                       />
                     </Stack>
                   )}
-
-                  <PieChart
+                  </div>
+                  <div className="col-8"><PieChart
                     series={[
                       {
                         data,
@@ -352,14 +332,15 @@ function Dashboard() {
                         },
                       },
                     ]}
-                    width={400}
-                    height={200}
+                    width={1200}
+                    height={300}
                     slotProps={{
                       legend: { hidden: true },
                       // position: 'start'
                     }}
-                  />
-                  <br />
+                    
+                  /></div>
+                </div>
                 </div>
               </div>
             </div>
