@@ -68,28 +68,58 @@ function App() {
                     <div id="content" className="container-fluid">
                       <div className="page-wrapper">
                         <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                              <Route path="/dashboard" element={<Dashboard />} />
+                          <Route path="/" element={<Dashboard />} />
+                          <Route path="/dashboard" element={<Dashboard />} />
 
                           {userRole === 1 && (
                             <>
-                              <Route path="/data-obat" element={<TabelObat />} />
+                              <Route
+                                path="/data-obat"
+                                element={<TabelObat />}
+                              />
                               <Route path="/form-obat" element={<FormObat />} />
-                              <Route path="/form-obat/:id" element={<FormObat />} />
-                              <Route path="/data-pengguna" element={<TabelPengguna />} />
-                              <Route path="/form-pengguna" element={<FormPengguna />} />
-                              <Route path="/form-pengguna/:id" element={<FormPengguna />} />
+                              <Route
+                                path="/form-obat/:id"
+                                element={<FormObat />}
+                              />
+                              <Route
+                                path="/data-pengguna"
+                                element={<TabelPengguna />}
+                              />
+                              <Route
+                                path="/form-pengguna"
+                                element={<FormPengguna />}
+                              />
+                              <Route
+                                path="/form-pengguna/:id"
+                                element={<FormPengguna />}
+                              />
                               {/* <Route path="/" element={<Pembelian />} /> */}
-                              <Route path="/data-pembelian" element={<TabelPembelian />} />
-                              <Route path="/data-detailpembelian" element={<DetailPembelian />} />
+                              <Route
+                                path="/data-pembelian"
+                                element={<TabelPembelian />}
+                              />
+                              <Route
+                                path="/data-detailpembelian"
+                                element={<DetailPembelian />}
+                              />
                             </>
                           )}
                           {userRole === 2 && (
                             <>
                               <Route path="/" element={<Pembelian />} />
-                              <Route path="/data-pembelian" element={<TabelPembelian />} />
-                              <Route path="/data-detailpembelian" element={<DetailPembelian />} />
-                              <Route path="/form-Pembelian" element={<Pembelian />} />
+                              <Route
+                                path="/data-pembelian"
+                                element={<TabelPembelian />}
+                              />
+                              <Route
+                                path="/data-detailpembelian"
+                                element={<DetailPembelian />}
+                              />
+                              <Route
+                                path="/form-Pembelian"
+                                element={<Pembelian />}
+                              />
                             </>
                           )}
                           <Route path="*" element={<NotFound />} />
@@ -149,20 +179,9 @@ function App() {
                 </div>
               </>
             ) : (
-              <div id="wrapper">
-                <HeaderComponent />
-                <div id="content-wrapper" className="d-flex flex-column">
-                  <NavbarComponent />
-                  <div id="content" className="container-fluid">
-                    <div className="page-wrapper">
-                      <Routes>
-                        <Route path="*" element={<Unauthorized />} />
-                      </Routes>
-                    </div>
-                  </div>
-                  <FooterComponent />
-                </div>
-              </div>
+              <Routes>
+                <Route path="*" element={<Unauthorized />} />
+              </Routes>
             )}
           </>
         )}

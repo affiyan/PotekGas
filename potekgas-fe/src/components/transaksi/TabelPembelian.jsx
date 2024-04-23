@@ -73,9 +73,7 @@ function TabelPembelian() {
   function viewDetailHandler(idTransaksi) {
     getDetailPembelianById(idTransaksi)
       .then((response) => {
-        console.log(response.data.data);
         setDetailPembelian(response.data.data);
-
         // Hitung total harga dari detail pembelian
         let totalHarga = 0;
         response.data.data.forEach((item) => {
@@ -261,7 +259,7 @@ function TabelPembelian() {
             <div className="modal-body modal-body-grid">
               <div className="d-flex flex-wrap">
                 {detailPembelian.map((item) => (
-                  <div key={item.idDetail} className="col-xl-4 col-md-6 mb-4">
+                  <div key={item.idObat} className="col-xl-4 col-md-6 mb-4">
                     <div className="card border-bottom-dark shadow h-100 py-2">
                       <div className="card-body">
                         <div className="row no-gutters align-items-center">

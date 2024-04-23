@@ -23,8 +23,13 @@ function Navbar() {
   const [totalHarga, setTotalHarga] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [message, setMessage] = useState();
+  const [isCheckoutDisabled, setIsCheckoutDisabled] = useState(true);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  useEffect(() => {
+    setIsCheckoutDisabled(cartItems.length === 0);
+  }, [cartItems]);
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,8 +47,8 @@ function Navbar() {
     setAnchorEl(null);
   };
 
-   // Fungsi untuk menghapus cookies cartItems saat logout
-   const handleLogout = () => {
+  // Fungsi untuk menghapus cookies cartItems saat logout
+  const handleLogout = () => {
     Cookies.remove("cartItems");
   };
 
@@ -151,12 +156,12 @@ function Navbar() {
 
   function saveTransaksi(e) {
     e.preventDefault();
-  
+
     // Mendapatkan data transaksi
     const formDataPembelian = [
       { idTransaksi: idTransaksi, idUser: userId, totalHarga: totalHarga },
     ];
-  
+
     // Mendapatkan data detail pembelian dari keranjang
     const mappedDataDetail = cartItems.map((item) => ({
       idDetail: 0,
@@ -164,7 +169,7 @@ function Navbar() {
       idObat: item.id_obat,
       jumlah: item.kuantitas,
     }));
-  
+
     if (mappedDataDetail.length === 0) {
       warningNotify("Harap Memilih Obat!");
     } else {
@@ -181,8 +186,8 @@ function Navbar() {
                   // Transaksi berhasil, kurangi stok obat
                   cartItems.forEach((item) => {
                     const newStock = item.stok - item.kuantitas;
-
                   });
+                  setIsCheckoutDisabled(true);
                   successNotify(message);
                 } else {
                   warningNotify(message);
@@ -191,18 +196,18 @@ function Navbar() {
               .catch((error) => {
                 console.error("Error saving Obat:", error);
               });
-            } else {
-              warningNotify(message);
-            }
-          })
-          .catch((error) => {
-            console.error("Error saving Obat:", error);
-          });
-  
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving Obat:", error);
+        });
+
       Cookies.remove("cartItems");
     }
   }
-  
+
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
       {/* Tombol sidebar */}
@@ -261,24 +266,20 @@ function Navbar() {
               },
             }}
           >
-           <div className="modal-header">
-                <h5
-                  className="modal-title"
-                  id="exampleModalLabel"
-                  style={{ fontWeight: "bold" }}
-                >
-                  Detail Pembelian : 
-                </h5>
-                <button
-                  className="close"
-                  type="button"
-                  onClick={handleClose}
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
+            <div className="modal-header">
+              <h5
+                className="modal-title"
+                id="exampleModalLabel"
+                style={{ fontWeight: "bold" }}
+              >
+                Detail Pembelian :
+              </h5>
+              <button className="close" type="button" onClick={handleClose}>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
             <div
-            className="modal-body"
+              className="modal-body"
               style={{
                 padding: "10px",
                 minWidth: "400px",
@@ -358,7 +359,11 @@ function Navbar() {
                 </div>
                 <div className="col" style={{ textAlign: "right" }}>
                   {" "}
-                  <button className="btn btn-primary" onClick={saveTransaksi}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={saveTransaksi}
+                    disabled={isCheckoutDisabled}
+                  >
                     Checkout
                   </button>
                 </div>
@@ -408,7 +413,7 @@ function Navbar() {
               href="#"
               data-toggle="modal"
               data-target="#logoutModal"
-              onClick={handleLogout} 
+              onClick={handleLogout}
             >
               <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
               Logout
