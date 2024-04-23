@@ -1,10 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import {
-  createUser,
-  updateUser,
-  getUserById,
-} from "../../services/UserService";
+import { createUser, updateUser, getUserById } from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -85,10 +80,8 @@ function FormPengguna() {
       no_telp,
       username,
       password,
-      // status: 1,
     };
 
-    // Buat objek FormData untuk mengirim data termasuk file gambar
     const formData = new FormData();
     formData.append("idUser", id);
     formData.append("namaUser", nama_user);
@@ -97,54 +90,46 @@ function FormPengguna() {
     formData.append("username", username);
     formData.append("password", password);
     formData.append("status", 1);
-    formData.append("foto", gambar); // Tambahkan gambar ke FormData
+    formData.append("foto", gambar);
 
     if (isUpdateMode) {
       updateUser(formData, formData)
-      .then((response) => {
-        const status = response.data.status;
-        const message = response.data.message;
-        if (status === 200) {
-          successNotify(message);
-        } else {
-          warningNotify(message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating user:", error.response);
-      });
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating user:", error.response);
+        });
     } else {
       createUser(formData, formData)
-          .then((response) => {
-            const status = response.data.status;
-            const message = response.data.message;
-            if (status === 200) {
-              successNotify(message);
-            } else {
-              warningNotify(message);
-            }
-          })
-          .catch((error) => {
-            console.error("Error saving user:", error);
-          });
+        .then((response) => {
+          const status = response.data.status;
+          const message = response.data.message;
+          if (status === 200) {
+            successNotify(message);
+          } else {
+            warningNotify(message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving user:", error);
+        });
     }
   }
 
   function deleteSelectedImage() {
-    // Menampilkan konfirmasi sebelum menghapus gambar
-    // const isConfirmed = window.confirm("Apakah Anda yakin ingin menghapus gambar?");
-    // if (isConfirmed) {
-    //   setGambar('null'); // Menghapus gambar dari state
-    //   setGambarUrl('../public/assets/img/undraw_profile.svg');
-    //   console.log('gambar : '+gambar) // Mengosongkan URL gambar yang ditampilkan
-    //   console.log('gambar Url : '+gambarUrl) // Mengosongkan URL gambar yang ditampilkan
-    // }
-    setGambar(null); // Menghapus gambar dari state
-    setGambarUrl('../public/assets/img/undraw_profile.svg');
-    console.log('gambar : '+gambar) // Mengosongkan URL gambar yang ditampilkan
-    console.log('gambar Url : '+gambarUrl) // Mengosongkan URL gambar yang ditampilkan
+    setGambar(null);
+    setGambarUrl("../public/assets/img/undraw_profile.svg");
+    console.log("gambar : " + gambar);
+    console.log("gambar Url : " + gambarUrl);
   }
-  
+
   return (
     <>
       <div className="container-fluid">
@@ -201,33 +186,35 @@ function FormPengguna() {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                <div className="col-sm-6 " hidden>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="form-control form-control-user"
-                    placeholder="Password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <span
-                    className="position-absolute top-5 end-0 translate-middle-y"
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      cursor: "pointer",
-                      top: "1px",
-                      marginTop: "14px",
-                      right: "30px",
-                      zIndex: "2",
-                    }}
-                  >
-                    {showPassword ? (
-                      <i className="fas fa-eye"></i>
-                    ) : (
-                      <i className="fas fa-eye-slash"></i>
-                    )}
-                  </span>
-                </div>
+                {!isUpdateMode && (
+                  <div className="col-sm-6 ">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control form-control-user"
+                      placeholder="Password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span
+                      className="position-absolute top-5 end-0 translate-middle-y"
+                      onClick={togglePasswordVisibility}
+                      style={{
+                        cursor: "pointer",
+                        top: "1px",
+                        marginTop: "14px",
+                        right: "30px",
+                        zIndex: "2",
+                      }}
+                    >
+                      {showPassword ? (
+                        <i className="fas fa-eye"></i>
+                      ) : (
+                        <i className="fas fa-eye-slash"></i>
+                      )}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="form-group row mb-4">
                 <div className="col-sm-6 ">
