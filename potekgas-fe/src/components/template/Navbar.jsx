@@ -14,8 +14,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 function Navbar() {
   const [id, setId] = useState(0);
-  const [nama, setNama] = useState("");
-  const [role, setRole] = useState("");
+  const [nama, setNama] = useState("Mas AD");
+  const [role, setRole] = useState("Master Admin");
   const [foto, setFoto] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [idTransaksi, setIdTransaksi] = useState(0);

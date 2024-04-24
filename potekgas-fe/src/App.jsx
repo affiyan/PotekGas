@@ -35,8 +35,12 @@ function App() {
 
         checkToken(token).then((response) => {
           if (response.status === 200) {
+            if (response.data.data[0].role != 1 && response.data.data[0].role != 2){
+              Cookies.remove('user')
+              // console.log(response.data.data[0].role)
+            }
             setIsValid(true);
-            setUserRole(response.data.data[0].role); // Set user role
+            setUserRole(response.data.data[0].role); 
           } else {
             setIsValid(false);
             console.log(response.status);
@@ -45,9 +49,7 @@ function App() {
       } catch (error) {
         console.log("Error parsing user cookie:", error);
       }
-    } else {
-      console.log("User cookie not found or empty");
-    }
+    } 
   }, []);
 
   return (
