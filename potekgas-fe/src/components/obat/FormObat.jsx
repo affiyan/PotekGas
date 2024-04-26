@@ -19,6 +19,7 @@ function FormObat() {
   const [tgl_kadaluarsa, setTgl_kadaluarsa] = useState("0001-01-01");
   const [stok, setStok] = useState(0);
   const [keterangan, setKeterangan] = useState("");
+  const [keteranganLength, setKeteranganLength] = useState(0); 
   const [gambar, setGambar] = useState("");
   const [gambarUrl, setGambarUrl] = useState("");
 
@@ -52,6 +53,18 @@ function FormObat() {
         });
     }
   }, [isUpdateMode, id]);
+
+  useEffect(() => {
+    setKeteranganLength(keterangan.length); // Update panjang keterangan setiap kali berubah
+  }, [keterangan]);
+
+  // Membatasi jumlah karakter keterangan
+  function handleKeteranganChange(e) {
+    const value = e.target.value;
+    if (value.length <= 100) {              // Memastikan keterangan tidak lebih dari 100 karakter
+      setKeterangan(value);
+    }
+  }
 
   function getTodayDate() {
     const today = new Date();
@@ -219,6 +232,12 @@ function FormObat() {
                     </option>
                     <option value="0">Tablet</option>
                     <option value="1">Kapsul</option>
+                    <option value="2">Sirup</option>
+                    <option value="3">Tetes</option>
+                    <option value="4">Emulsi</option>
+                    <option value="5">Larutan</option>
+                    <option value="6">Suspensi</option>
+                    <option value="7">krim</option>
                   </select>
                 </div>
                 <div className="col-sm-6">
@@ -255,20 +274,23 @@ function FormObat() {
                 </div>
               </div>
               <div className="form-group row">
-                <div className="col-sm-6">
+              <div className="col-sm-6" style={{ position: 'relative' }}>
                   <textarea
                     name="keterangan"
                     id="keterangan"
                     cols="30"
                     rows="10"
                     className="form-control"
-                    placeholder="Keterangan"
+                    placeholder="Keterangan (max 100 karakter)"
                     value={keterangan}
-                    onChange={(e) => setKeterangan(e.target.value)}
+                    onChange={handleKeteranganChange}
                     style={{
                       borderRadius: "10px",
                     }}
                   ></textarea>
+                  <span style={{ position: 'absolute', bottom: '10px', right: '20px', transform: 'translateX(-5px)' }}>
+                    {keteranganLength}/100
+                  </span>
                 </div>
                 <div className="col-sm-6">
                   <label htmlFor="gambar" className="btn btn-primary">

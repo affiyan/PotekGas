@@ -162,7 +162,7 @@ function App() {
                         </button>
                       </div>
                       <div className="modal-body">
-                        Pilih Keluar Untuk Keluar Dari Program.
+                        Pilih Keluar Untuk Keluar Dari PotekGas.
                       </div>
                       <div className="modal-footer">
                         <button

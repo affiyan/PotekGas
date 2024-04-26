@@ -73,6 +73,10 @@ function FormPengguna() {
   function saveUser(e) {
     e.preventDefault();
 
+    if (no_telp.length < 10 || no_telp.length > 13) {
+      warningNotify("Nomor telepon harus terdiri dari 10 sampai 13 digit.");
+      return; // Hentikan proses simpan data jika validasi gagal
+    }
     var user = {
       id_user: id,
       nama_user,
